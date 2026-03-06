@@ -1,0 +1,454 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Visual Studio project for Open Watcom VI editor - NT Console (character mode) build.
+
+  This replicates the nt386 makefile target: a Windows console application
+  using Win32 Console APIs for screen/keyboard/mouse I/O.
+
+  Source directories:
+    ..\c\     - Core editor source (~105 files)
+    ..\nt\    - NT platform layer (7 files)
+    ..\ui\    - Character-mode UI (20 files)
+    .\        - MSVC compatibility stubs (getopt.c, autoenv.c)
+
+  Header directories:
+    ..\h\     - Main editor headers
+    .\        - MSVC compat headers (banner.h, clibext.h, dos.h, getopt.h, autoenv.h)
+-->
+<Project DefaultTargets="Build" ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{44996CDF-F3E0-46C6-8DBD-92C83A4A0E1F}</ProjectGuid>
+    <RootNamespace>vi</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <Keyword>Win32Proj</Keyword>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <!-- Configuration-specific property sheets -->
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings" />
+
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+
+  <PropertyGroup Label="UserMacros" />
+
+  <!-- Output directories -->
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(Configuration)\$(Platform)\</IntDir>
+    <TargetName>vi</TargetName>
+    <TargetExt>.exe</TargetExt>
+  </PropertyGroup>
+
+  <!-- ============================================================ -->
+  <!-- Compiler settings common to all configurations               -->
+  <!-- ============================================================ -->
+  <ItemDefinitionGroup>
+    <ClCompile>
+      <!--
+        Include paths:
+          ..\h    = main editor headers
+          .       = msvc compat stubs (banner.h, clibext.h, dos.h, getopt.h, autoenv.h)
+        The msvc\ directory is listed FIRST so our dos.h shim takes
+        priority over any system dos.h.
+      -->
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)..\h;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <!--
+        Preprocessor defines:
+          __NT__    = Target is Windows NT (activates Win32 console API code paths)
+          __386__   = 32-bit x86 target (used by control.h and other platform guards)
+          NOUSE3D   = Disable 3D UI controls (from original makefile)
+          _CRT_SECURE_NO_WARNINGS = Suppress MSVC deprecation warnings for standard C functions
+          _CRT_NONSTDC_NO_DEPRECATE = Suppress warnings for POSIX function names
+      -->
+      <PreprocessorDefinitions>__NT__;__386__;NOUSE3D=1;_CRT_SECURE_NO_WARNINGS;_CRT_NONSTDC_NO_DEPRECATE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <CompileAs>CompileAsC</CompileAs>
+      <!-- Treat all source as C, not C++ -->
+      <WarningLevel>Level3</WarningLevel>
+      <ConformanceMode>false</ConformanceMode>
+      <!--
+        Disable specific warnings that will fire on this legacy codebase:
+          4013 = 'function' undefined; assuming extern returning int
+          4018 = signed/unsigned mismatch
+          4024 = different types for formal and actual parameter
+          4047 = differs in levels of indirection
+          4090 = different 'const' qualifiers
+          4100 = unreferenced formal parameter
+          4101 = unreferenced local variable
+          4113 = actual parameter lists differ
+          4133 = incompatible types
+          4146 = unary minus operator applied to unsigned type
+          4244 = conversion from 'type1' to 'type2', possible loss of data
+          4267 = conversion from 'size_t' to 'type', possible loss of data
+      -->
+      <DisableSpecificWarnings>4013;4018;4024;4047;4090;4100;4101;4113;4133;4146;4244;4267;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <!--
+        Force include our dos.h compatibility header so it is seen before
+        the system dos.h wherever #include <dos.h> appears in the code.
+      -->
+      <ForcedIncludeFiles>%(ForcedIncludeFiles)</ForcedIncludeFiles>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>131072</StackReserveSize>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Debug-specific overrides -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <RuntimeLibrary Condition="'$(Platform)'=='Win32'">MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Platform)'=='x64'">MultiThreadedDebug</RuntimeLibrary>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Release-specific overrides -->
+  <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <RuntimeLibrary Condition="'$(Platform)'=='Win32'">MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Platform)'=='x64'">MultiThreaded</RuntimeLibrary>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- ============================================================ -->
+  <!-- Source files                                                  -->
+  <!-- ============================================================ -->
+  <ItemGroup>
+    <!-- ======== c\ directory: Core editor sources ======== -->
+    <!-- objects.mif: objtimeroot -->
+    <ClCompile Include="..\c\rxwrap.c" />
+    <ClCompile Include="..\c\rxsupp.c" />
+    <ClCompile Include="..\c\tab_hell.c" />
+    <ClCompile Include="..\c\regsub.c" />
+    <ClCompile Include="..\c\findrx.c" />
+    <ClCompile Include="..\c\mem.c" />
+    <ClCompile Include="..\c\fcbxmint.c" />
+    <ClCompile Include="..\c\addstr.c" />
+    <ClCompile Include="..\c\llrtns.c" />
+    <ClCompile Include="..\c\parse.c" />
+
+    <!-- objects.mif: objtime -->
+    <ClCompile Include="..\c\fcbems.c" />
+    <ClCompile Include="..\c\fcbxms.c" />
+    <ClCompile Include="..\c\fcbdisk.c" />
+    <ClCompile Include="..\c\fcbxmem.c" />
+    <ClCompile Include="..\c\fcbblock.c" />
+    <ClCompile Include="..\c\fcb.c" />
+    <ClCompile Include="..\c\fcbmem.c" />
+    <ClCompile Include="..\c\fcbsplit.c" />
+    <ClCompile Include="..\c\fcbdup.c" />
+    <ClCompile Include="..\c\fcbmerge.c" />
+    <ClCompile Include="..\c\linenew.c" />
+    <ClCompile Include="..\c\dc.c" />
+    <ClCompile Include="..\c\lineptr.c" />
+    <ClCompile Include="..\c\linecfb.c" />
+    <ClCompile Include="..\c\linedisp.c" />
+    <ClCompile Include="..\c\linemisc.c" />
+    <ClCompile Include="..\c\linedel.c" />
+    <ClCompile Include="..\c\lineins.c" />
+    <ClCompile Include="..\c\lineyank.c" />
+    <ClCompile Include="..\c\grep.c" />
+    <ClCompile Include="..\c\editmain.c" />
+    <ClCompile Include="..\c\filesave.c" />
+    <ClCompile Include="..\c\filenew.c" />
+    <ClCompile Include="..\c\undo.c" />
+    <ClCompile Include="..\c\undostks.c" />
+    <ClCompile Include="..\c\undo_do.c" />
+    <ClCompile Include="..\c\clglob.c" />
+    <ClCompile Include="..\c\clsubs.c" />
+    <ClCompile Include="..\c\shove.c" />
+    <ClCompile Include="..\c\match.c" />
+    <ClCompile Include="..\c\cut.c" />
+    <ClCompile Include="..\c\opmove.c" />
+    <ClCompile Include="..\c\srcgen.c" />
+    <ClCompile Include="..\c\fmatch.c" />
+    <ClCompile Include="..\c\status.c" />
+    <ClCompile Include="..\c\expr.c" />
+    <ClCompile Include="..\c\op.c" />
+    <ClCompile Include="..\c\lang.c" />
+    <ClCompile Include="..\c\sstyle.c" />
+    <ClCompile Include="..\c\sstyle_f.c" />
+    <ClCompile Include="..\c\sstyle_c.c" />
+    <ClCompile Include="..\c\sstyle_h.c" />
+    <ClCompile Include="..\c\sstyle_g.c" />
+    <ClCompile Include="..\c\sstyle_m.c" />
+    <ClCompile Include="..\c\sstyle_p.c" />
+    <ClCompile Include="..\c\rcs.c" />
+
+    <!-- objects.mif: objsizeroot -->
+    <ClCompile Include="..\c\name.c" />
+    <ClCompile Include="..\c\key.c" />
+    <ClCompile Include="..\c\globals.c" />
+    <ClCompile Include="..\c\pdata.c" />
+    <ClCompile Include="..\c\exdata.c" />
+    <ClCompile Include="..\c\srcdata.c" />
+
+    <!-- objects.mif: objsize -->
+    <ClCompile Include="..\c\xmem.c" />
+    <ClCompile Include="..\c\fcbswap.c" />
+    <ClCompile Include="..\c\clset.c" />
+    <ClCompile Include="..\c\hist.c" />
+    <ClCompile Include="..\c\samefile.c" />
+    <ClCompile Include="..\c\dirdisp.c" />
+    <ClCompile Include="..\c\expandfn.c" />
+    <ClCompile Include="..\c\getdir.c" />
+    <ClCompile Include="..\c\mapkey.c" />
+    <ClCompile Include="..\c\editmv.c" />
+    <ClCompile Include="..\c\linenum.c" />
+    <ClCompile Include="..\c\linework.c" />
+    <ClCompile Include="..\c\undoclne.c" />
+    <ClCompile Include="..\c\fcbdmp.c" />
+    <ClCompile Include="..\c\file.c" />
+    <ClCompile Include="..\c\filemove.c" />
+    <ClCompile Include="..\c\filelast.c" />
+    <ClCompile Include="..\c\fini.c" />
+    <ClCompile Include="..\c\autosave.c" />
+    <ClCompile Include="..\c\srchook.c" />
+    <ClCompile Include="..\c\srcgoto.c" />
+    <ClCompile Include="..\c\srcif.c" />
+    <ClCompile Include="..\c\srcfile.c" />
+    <ClCompile Include="..\c\srccs.c" />
+    <ClCompile Include="..\c\srcexpr.c" />
+    <ClCompile Include="..\c\srcvar.c" />
+    <ClCompile Include="..\c\srcinp.c" />
+    <ClCompile Include="..\c\srcassgn.c" />
+    <ClCompile Include="..\c\srcexpnd.c" />
+    <ClCompile Include="..\c\srcnextw.c" />
+    <ClCompile Include="..\c\filestk.c" />
+    <ClCompile Include="..\c\dotmode.c" />
+    <ClCompile Include="..\c\source.c" />
+    <ClCompile Include="..\c\mark.c" />
+    <ClCompile Include="..\c\move.c" />
+    <ClCompile Include="..\c\change.c" />
+    <ClCompile Include="..\c\delete.c" />
+    <ClCompile Include="..\c\linefind.c" />
+    <ClCompile Include="..\c\dat.c" />
+    <ClCompile Include="..\c\parsecl.c" />
+    <ClCompile Include="..\c\findcmd.c" />
+    <ClCompile Include="..\c\savebuf.c" />
+    <ClCompile Include="..\c\error.c" />
+    <ClCompile Include="..\c\cmdline.c" />
+    <ClCompile Include="..\c\editdc.c" />
+    <ClCompile Include="..\c\word.c" />
+    <ClCompile Include="..\c\hide.c" />
+    <ClCompile Include="..\c\editins.c" />
+    <ClCompile Include="..\c\getautoi.c" />
+    <ClCompile Include="..\c\replace.c" />
+    <ClCompile Include="..\c\dir.c" />
+    <ClCompile Include="..\c\select.c" />
+    <ClCompile Include="..\c\io.c" />
+    <ClCompile Include="..\c\clread.c" />
+    <ClCompile Include="..\c\cledit.c" />
+    <ClCompile Include="..\c\misc.c" />
+    <ClCompile Include="..\c\tags.c" />
+    <ClCompile Include="..\c\alias.c" />
+    <ClCompile Include="..\c\bnddata.c" />
+    <ClCompile Include="..\c\abandon.c" />
+    <ClCompile Include="..\c\filter.c" />
+    <ClCompile Include="..\c\ex.c" />
+    <ClCompile Include="..\c\exappend.c" />
+    <ClCompile Include="..\c\wingen.c" />
+    <ClCompile Include="..\c\printf.c" />
+    <ClCompile Include="..\c\getspcmd.c" />
+    <ClCompile Include="..\c\selrgn.c" />
+    <ClCompile Include="..\c\cstatus.c" />
+    <ClCompile Include="..\c\help.c" />
+    <ClCompile Include="..\c\readstr.c" />
+    <ClCompile Include="..\c\tab_e_c.c" />
+    <ClCompile Include="..\c\gencfg.c" />
+    <ClCompile Include="..\c\fts.c" />
+
+    <!-- objects.mif: objinit (init is in c\, getopt and autoenv are our stubs) -->
+    <ClCompile Include="..\c\init.c" />
+
+    <!-- objects.mif: version.obj (linked separately in original makefile) -->
+    <ClCompile Include="..\c\version.c" />
+
+    <!-- nt.mif: objntsize (dosdir and time are in c\, rest in nt\) -->
+    <ClCompile Include="..\c\dosdir.c" />
+    <ClCompile Include="..\c\time.c" />
+
+    <!-- ======== nt\ directory: NT platform layer ======== -->
+    <!-- nt.mif: objnttimeroot -->
+    <ClCompile Include="..\nt\int.c" />
+    <!-- nt.mif: objntsizeroot -->
+    <ClCompile Include="..\nt\biosnt.c" />
+    <!-- nt.mif: objntsize -->
+    <ClCompile Include="..\nt\ntcmds.c" />
+    <ClCompile Include="..\nt\ntsys.c" />
+    <ClCompile Include="..\nt\ntmain.c" />
+    <ClCompile Include="..\nt\ntmouse.c" />
+    <ClCompile Include="..\nt\spawn.c" />
+
+    <!-- ======== ui\ directory: Character-mode UI ======== -->
+    <!-- ui.mif: objuitimeroot -->
+    <ClCompile Include="..\ui\windisp.c" />
+    <ClCompile Include="..\ui\winscrl.c" />
+    <ClCompile Include="..\ui\winnew.c" />
+    <!-- ui.mif: objuisizeroot -->
+    <ClCompile Include="..\ui\uiglob.c" />
+    <ClCompile Include="..\ui\ui8086.c" />
+    <ClCompile Include="..\ui\winbrdr.c" />
+    <ClCompile Include="..\ui\winthumb.c" />
+    <ClCompile Include="..\ui\winover.c" />
+    <ClCompile Include="..\ui\winshow.c" />
+    <ClCompile Include="..\ui\winswap.c" />
+    <ClCompile Include="..\ui\mouse.c" />
+    <!-- ui.mif: objuisize -->
+    <ClCompile Include="..\ui\adjwin.c" />
+    <ClCompile Include="..\ui\hdlmouse.c" />
+    <ClCompile Include="..\ui\mouseev.c" />
+    <ClCompile Include="..\ui\winaux.c" />
+    <ClCompile Include="..\ui\wininit.c" />
+    <ClCompile Include="..\ui\winsize.c" />
+    <ClCompile Include="..\ui\wintica.c" />
+    <ClCompile Include="..\ui\filesel.c" />
+    <ClCompile Include="..\ui\menu.c" />
+
+    <!-- ======== msvc\ directory: MSVC compatibility stubs ======== -->
+    <ClCompile Include="getopt.c" />
+    <ClCompile Include="autoenv.c" />
+  </ItemGroup>
+
+  <!-- ============================================================ -->
+  <!-- Header files                                                 -->
+  <!-- ============================================================ -->
+  <ItemGroup>
+    <!-- h\ directory: Main editor headers -->
+    <ClInclude Include="..\h\borders.h" />
+    <ClInclude Include="..\h\cmds.h" />
+    <ClInclude Include="..\h\colors.h" />
+    <ClInclude Include="..\h\const.h" />
+    <ClInclude Include="..\h\control.h" />
+    <ClInclude Include="..\h\dc.h" />
+    <ClInclude Include="..\h\dosext.h" />
+    <ClInclude Include="..\h\dosmouse.h" />
+    <ClInclude Include="..\h\dosx.h" />
+    <ClInclude Include="..\h\errs.h" />
+    <ClInclude Include="..\h\events.h" />
+    <ClInclude Include="..\h\ex.h" />
+    <ClInclude Include="..\h\expr.h" />
+    <ClInclude Include="..\h\fcbmem.h" />
+    <ClInclude Include="..\h\fts.h" />
+    <ClInclude Include="..\h\globals.h" />
+    <ClInclude Include="..\h\intr.h" />
+    <ClInclude Include="..\h\lang.h" />
+    <ClInclude Include="..\h\langdef.h" />
+    <ClInclude Include="..\h\mem.h" />
+    <ClInclude Include="..\h\menu.h" />
+    <ClInclude Include="..\h\mouse.h" />
+    <ClInclude Include="..\h\myprtf.h" />
+    <ClInclude Include="..\h\parsecl.h" />
+    <ClInclude Include="..\h\posix.h" />
+    <ClInclude Include="..\h\pragmas.h" />
+    <ClInclude Include="..\h\rcs.h" />
+    <ClInclude Include="..\h\rtns.h" />
+    <ClInclude Include="..\h\rtns2.h" />
+    <ClInclude Include="..\h\rxsupp.h" />
+    <ClInclude Include="..\h\setb.h" />
+    <ClInclude Include="..\h\setnb.h" />
+    <ClInclude Include="..\h\source.h" />
+    <ClInclude Include="..\h\sstyle.h" />
+    <ClInclude Include="..\h\sstyle_c.h" />
+    <ClInclude Include="..\h\sstyle_f.h" />
+    <ClInclude Include="..\h\sstyle_g.h" />
+    <ClInclude Include="..\h\sstyle_h.h" />
+    <ClInclude Include="..\h\sstyle_m.h" />
+    <ClInclude Include="..\h\sstyle_p.h" />
+    <ClInclude Include="..\h\stack.h" />
+    <ClInclude Include="..\h\struct.h" />
+    <ClInclude Include="..\h\vi.h" />
+    <ClInclude Include="..\h\vibios.h" />
+    <ClInclude Include="..\h\win.h" />
+    <ClInclude Include="..\h\winaux.h" />
+    <ClInclude Include="..\h\xmem.h" />
+
+    <!-- msvc\ directory: MSVC compatibility headers -->
+    <ClInclude Include="banner.h" />
+    <ClInclude Include="clibext.h" />
+    <ClInclude Include="dos.h" />
+    <ClInclude Include="getopt.h" />
+    <ClInclude Include="autoenv.h" />
+    <ClInclude Include="rcscli.h" />
+    <ClInclude Include="bool.h" />
+    <ClInclude Include="walloca.h" />
+    <ClInclude Include="regexp.h" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets" />
+</Project>

@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>c;cpp</Extensions>
+    </Filter>
+    <Filter Include="Source Files\core">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\nt">
+      <UniqueIdentifier>{7A5B8D78-5F3C-4A2E-B012-6BCAE4791D2F}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ui">
+      <UniqueIdentifier>{B3E1F7C4-2A0D-4E67-9C82-F4A3D5E6B890}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\msvc">
+      <UniqueIdentifier>{D1E2F3A4-5B6C-7D8E-9F01-A2B3C4D5E6F7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>h;hpp</Extensions>
+    </Filter>
+    <Filter Include="Header Files\msvc">
+      <UniqueIdentifier>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Core editor sources -->
+    <ClCompile Include="..\c\rxwrap.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\rxsupp.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\tab_hell.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\regsub.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\findrx.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\mem.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbxmint.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\addstr.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\llrtns.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\parse.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbems.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbxms.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbdisk.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbxmem.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbblock.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcb.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbmem.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbsplit.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbdup.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbmerge.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linenew.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\dc.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\lineptr.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linecfb.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linedisp.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linemisc.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linedel.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\lineins.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\lineyank.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\grep.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\editmain.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\filesave.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\filenew.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\undo.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\undostks.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\undo_do.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\clglob.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\clsubs.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\shove.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\match.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\cut.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\opmove.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcgen.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fmatch.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\status.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\expr.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\op.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\lang.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\sstyle.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\sstyle_f.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\sstyle_c.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\sstyle_h.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\sstyle_g.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\sstyle_m.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\sstyle_p.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\rcs.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\name.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\key.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\globals.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\pdata.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\exdata.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcdata.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\xmem.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbswap.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\clset.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\hist.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\samefile.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\dirdisp.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\expandfn.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\getdir.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\mapkey.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\editmv.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linenum.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linework.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\undoclne.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fcbdmp.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\file.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\filemove.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\filelast.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fini.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\autosave.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srchook.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcgoto.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcif.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcfile.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srccs.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcexpr.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcvar.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcinp.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcassgn.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcexpnd.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\srcnextw.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\filestk.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\dotmode.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\source.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\mark.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\move.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\change.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\delete.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\linefind.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\dat.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\parsecl.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\findcmd.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\savebuf.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\error.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\cmdline.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\editdc.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\word.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\hide.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\editins.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\getautoi.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\replace.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\dir.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\select.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\io.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\clread.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\cledit.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\misc.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\tags.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\alias.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\bnddata.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\abandon.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\filter.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\ex.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\exappend.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\wingen.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\printf.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\getspcmd.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\selrgn.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\cstatus.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\help.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\readstr.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\tab_e_c.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\gencfg.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\fts.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\init.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\version.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\dosdir.c"><Filter>Source Files\core</Filter></ClCompile>
+    <ClCompile Include="..\c\time.c"><Filter>Source Files\core</Filter></ClCompile>
+
+    <!-- NT platform layer -->
+    <ClCompile Include="..\nt\int.c"><Filter>Source Files\nt</Filter></ClCompile>
+    <ClCompile Include="..\nt\biosnt.c"><Filter>Source Files\nt</Filter></ClCompile>
+    <ClCompile Include="..\nt\ntcmds.c"><Filter>Source Files\nt</Filter></ClCompile>
+    <ClCompile Include="..\nt\ntsys.c"><Filter>Source Files\nt</Filter></ClCompile>
+    <ClCompile Include="..\nt\ntmain.c"><Filter>Source Files\nt</Filter></ClCompile>
+    <ClCompile Include="..\nt\ntmouse.c"><Filter>Source Files\nt</Filter></ClCompile>
+    <ClCompile Include="..\nt\spawn.c"><Filter>Source Files\nt</Filter></ClCompile>
+
+    <!-- Character-mode UI -->
+    <ClCompile Include="..\ui\windisp.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winscrl.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winnew.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\uiglob.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\ui8086.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winbrdr.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winthumb.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winover.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winshow.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winswap.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\mouse.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\adjwin.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\hdlmouse.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\mouseev.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winaux.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\wininit.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\winsize.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\wintica.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\filesel.c"><Filter>Source Files\ui</Filter></ClCompile>
+    <ClCompile Include="..\ui\menu.c"><Filter>Source Files\ui</Filter></ClCompile>
+
+    <!-- MSVC compatibility stubs -->
+    <ClCompile Include="getopt.c"><Filter>Source Files\msvc</Filter></ClCompile>
+    <ClCompile Include="autoenv.c"><Filter>Source Files\msvc</Filter></ClCompile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Main editor headers -->
+    <ClInclude Include="..\h\borders.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\cmds.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\colors.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\const.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\control.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\dc.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\dosext.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\dosmouse.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\dosx.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\errs.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\events.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\ex.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\expr.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\fcbmem.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\fts.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\globals.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\intr.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\lang.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\langdef.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\mem.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\menu.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\mouse.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\myprtf.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\parsecl.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\posix.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\pragmas.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\rcs.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\rtns.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\rtns2.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\rxsupp.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\setb.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\setnb.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\source.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\sstyle.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\sstyle_c.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\sstyle_f.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\sstyle_g.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\sstyle_h.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\sstyle_m.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\sstyle_p.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\stack.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\struct.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\vi.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\vibios.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\win.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\winaux.h"><Filter>Header Files</Filter></ClInclude>
+    <ClInclude Include="..\h\xmem.h"><Filter>Header Files</Filter></ClInclude>
+
+    <!-- MSVC compat headers -->
+    <ClInclude Include="banner.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="clibext.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="dos.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="getopt.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="autoenv.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="rcscli.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="bool.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="walloca.h"><Filter>Header Files\msvc</Filter></ClInclude>
+    <ClInclude Include="regexp.h"><Filter>Header Files\msvc</Filter></ClInclude>
+  </ItemGroup>
+</Project>

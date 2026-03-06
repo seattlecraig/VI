@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(python3:*)",
+      "Bash(xargs:*)",
+      "Bash(/tmp/all_includes.txt:*)",
+      "Read(//tmp/**)",
+      "Bash(\"C:/Program Files/Microsoft Visual Studio/2022/Preview/MSBuild/Current/Bin/MSBuild.exe\":*)",
+      "Read(//c/Program Files/Microsoft Visual Studio//**)",
+      "Read(//c/Program Files \\(x86\\)/Microsoft Visual Studio//**)",
+      "Bash(find:*)",
+      "Bash(\"/c/Program Files \\(x86\\)/Microsoft Visual Studio/2019/BuildTools/MSBuild/Current/Bin/MSBuild.exe\":*)",
+      "Bash(D:/GitHub/vi/msvc/bin/Debug/Win32/vi.exe:*)",
+      "Bash(timeout 3 D:/GitHub/vi/msvc/bin/Debug/Win32/vi.exe:*)",
+      "Bash(taskkill:*)",
+      "Bash(grep:*)"
+    ]
+  }
+}
