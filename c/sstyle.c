@@ -94,6 +94,7 @@ static void getNextBlock( ss_block *ss_new, char *text, int text_col,
         break;
     case LANG_HTML:
     case LANG_WML:
+    case LANG_XML:
         GetHTMLBlock( ss_new, text + text_col, text_col );
         break;
     case LANG_GML:
@@ -111,6 +112,10 @@ static void getNextBlock( ss_block *ss_new, char *text, int text_col,
         break;
     case LANG_C:
     case LANG_CPP:
+    case LANG_CSHARP:
+    case LANG_JSON:
+    case LANG_JS:
+    case LANG_TS:
     case LANG_JAVA:
     case LANG_SQL:
     case LANG_BAT:
@@ -323,6 +328,10 @@ void SSDifBlock( ss_block *ss_old, char *text, int start_col,
     switch( CurrentInfo->Language ) {
     case LANG_C:
     case LANG_CPP:
+    case LANG_CSHARP:
+    case LANG_JSON:
+    case LANG_JS:
+    case LANG_TS:
     case LANG_JAVA:
     case LANG_SQL:
     case LANG_BAT:
@@ -337,6 +346,7 @@ void SSDifBlock( ss_block *ss_old, char *text, int start_col,
         break;
     case LANG_HTML:
     case LANG_WML:
+    case LANG_XML:
         InitHTMLLine( text );
         break;
     case LANG_GML:
@@ -408,6 +418,10 @@ bool SSKillsFlags( char ch )
         switch( CurrentInfo->Language ) {
         case LANG_C:
         case LANG_CPP:
+        case LANG_CSHARP:
+        case LANG_JSON:
+        case LANG_JS:
+        case LANG_TS:
         case LANG_JAVA:
         case LANG_SQL:
         case LANG_BAT:
@@ -428,6 +442,7 @@ bool SSKillsFlags( char ch )
             break;
         case LANG_HTML:
         case LANG_WML:
+        case LANG_XML:
             if( ch == '<' || ch == '>' ) {
                 return( TRUE );
             }
@@ -453,6 +468,10 @@ void SSInitLanguageFlags( linenum line_no )
         switch( CurrentInfo->Language ) {
         case LANG_C:
         case LANG_CPP:
+        case LANG_CSHARP:
+        case LANG_JSON:
+        case LANG_JS:
+        case LANG_TS:
         case LANG_JAVA:
         case LANG_SQL:
         case LANG_BAT:
@@ -467,6 +486,7 @@ void SSInitLanguageFlags( linenum line_no )
             break;
         case LANG_HTML:
         case LANG_WML:
+        case LANG_XML:
             InitHTMLFlags( line_no );
             break;
         case LANG_GML:
@@ -489,6 +509,10 @@ void SSInitLanguageFlagsGivenValues( ss_flags *flags )
         switch( CurrentInfo->Language ) {
         case LANG_C:
         case LANG_CPP:
+        case LANG_CSHARP:
+        case LANG_JSON:
+        case LANG_JS:
+        case LANG_TS:
         case LANG_JAVA:
         case LANG_SQL:
         case LANG_BAT:
@@ -503,6 +527,7 @@ void SSInitLanguageFlagsGivenValues( ss_flags *flags )
             break;
         case LANG_HTML:
         case LANG_WML:
+        case LANG_XML:
             InitHTMLFlagsGivenValues( &flags->h );
             break;
         case LANG_GML:
@@ -525,6 +550,10 @@ void SSGetLanguageFlags( ss_flags *flags )
         switch( CurrentInfo->Language ) {
         case LANG_C:
         case LANG_CPP:
+        case LANG_CSHARP:
+        case LANG_JSON:
+        case LANG_JS:
+        case LANG_TS:
         case LANG_JAVA:
         case LANG_SQL:
         case LANG_BAT:
@@ -539,6 +568,7 @@ void SSGetLanguageFlags( ss_flags *flags )
             break;
         case LANG_HTML:
         case LANG_WML:
+        case LANG_XML:
             GetHTMLFlags( &flags->h );
             break;
         case LANG_GML:

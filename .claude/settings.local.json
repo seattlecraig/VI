@@ -21,7 +21,13 @@
       "Bash(cmd:*)",
       "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/MSBuild.exe\":*)",
       "Bash(MSYS_NO_PATHCONV=1 \"$MSBUILDFULL\":*)",
-      "Bash(export:*)"
+      "Bash(export:*)",
+      "Bash(xxd:*)",
+      "Bash(file:*)",
+      "Bash(unix2dos:*)",
+      "Bash(printf 88\\\\r\\\\n:*)",
+      "Bash(printf Int32\\\\r\\\\nInt64\\\\r\\\\n:*)",
+      "Bash(cmd.exe:*)"
     ]
   }
 }

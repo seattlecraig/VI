@@ -289,7 +289,7 @@ int             SwapFileHandle = -1;
 int             SwapBlockArraySize;
 int             SwapBlocksInUse;
 int             MaxSwapBlocks = 2048;
-int             MaxLine = 512, MaxLinem1 = 511;
+int             MaxLine = 0x40000, MaxLinem1 = 0x40000 - 1;
 char            *Comspec;
 
 /*

@@ -176,7 +176,7 @@ void ScreenInit( void )
     GetConsoleTitle( tmp, sizeof( tmp ) );
     AddString( &oldConTitle, tmp );
     if( !EditFlags.Quiet ) {
-        SetConsoleTitle( "Open Watcom vi" );
+        SetConsoleTitle( "Craig's VI" );
     }
 
 } /* ScreenInit */
@@ -193,7 +193,6 @@ void HandleConsoleResize( short newW, short newH )
     DWORD                       safeSize;
     int                         maxW, maxH;
     int                         i;
-    FILE                        *dbgf;
     static bool                 inResize = FALSE;
 
     /* Guard against re-entrancy: SetConsoleScreenBufferSize generates
@@ -213,13 +212,6 @@ void HandleConsoleResize( short newW, short newH )
     }
 
     inResize = TRUE;
-
-    dbgf = fopen( "vi_screen_debug.txt", "a" );
-    if( dbgf != NULL ) {
-        fprintf( dbgf, "RESIZE: old=%dx%d new=%dx%d\n",
-            WindMaxWidth, WindMaxHeight, newW, newH );
-        fclose( dbgf );
-    }
 
     /*
      * Allocate buffers large enough for BOTH old and new dimensions.

@@ -285,7 +285,7 @@ void SetWindowSizes( void )
     setw_info.y2 = WindMaxHeight - 4;
     filelistw_info.x2 = WindMaxWidth - 2;
     filelistw_info.y2 = WindMaxHeight - 7;
-    statusw_info.y1 = WindMaxHeight - 2;
+    statusw_info.y1 = WindMaxHeight - 1;
     statusw_info.y2 = WindMaxHeight - 1;
 
 } /* SetWindSizes */
@@ -340,6 +340,7 @@ void SetFileWindowTitle( window_id cw, info *cinfo, bool hilite )
 {
     char        *n;
     char        name[MAX_STR];
+    char        title[MAX_STR];
 
     if( CurrentFile->dup_count > 0 ) {
         MySprintf( name, "%s [%d]", CurrentFile->name, cinfo->DuplicateID );
@@ -351,6 +352,10 @@ void SetFileWindowTitle( window_id cw, info *cinfo, bool hilite )
 #ifdef __WIN__
     SetWindowText( cw, n );
     UpdateFileTypeIcon( cw, n );
+#else
+    /* Update the console window title with the current file name */
+    MySprintf( title, "Craig's VI: %s", n );
+    SetConsoleTitleA( title );
 #endif
 
 } /* SetFileWindowTitle */

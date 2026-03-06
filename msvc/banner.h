@@ -11,7 +11,7 @@
 #define _BANNER_H_INCLUDED
 
 /* Version string -- adjust as needed */
-#define _VI_VERSION_    "2.4.0"
+#define _VI_VERSION_    "3.0.0"
 
 /* banner2( year ) produces a copyright string */
 #define banner2( year )  "Copyright (c) 1991-" year " Open Watcom Contributors"
