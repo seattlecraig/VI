@@ -148,7 +148,7 @@ typedef struct {
  * window dimension
  */
 typedef struct {
-    short       x1, y1, x2, y2;
+    int         x1, y1, x2, y2;
 } windim;
 
 /*
@@ -188,7 +188,7 @@ typedef struct linedata {
 
 typedef struct line {
     struct line *next, *prev;   // links for other lines
-    short       len;            // length of line
+    int         len;            // length of line
     union {
         linedata        ld;
         short           word;
@@ -210,7 +210,7 @@ typedef struct fcb {
     struct file *f;                         // file associated with fcb
     line_list   lines;                      // linked list of lines
     linenum     start_line, end_line;       // starting/ending line number
-    short       byte_cnt;                   // number of bytes in lines
+    int         byte_cnt;                   // number of bytes in lines
     long        offset;                     // offset in swap file
     long        last_swap;                  // time fcb was last swapped
     vi_ushort   swapped             : 1;    // fcb is swapped
@@ -366,7 +366,7 @@ typedef struct {
     vi_color    border_color1, border_color2;
     type_style  text;
     type_style  hilight;
-    short       x1, y1, x2, y2;
+    int         x1, y1, x2, y2;
 } window_info;
 
 /*
@@ -381,7 +381,7 @@ typedef fcb_list undo_delete;
 typedef struct {
     i_mark      p;
     linenum     top;
-    short       depth;
+    int         depth;
     long        time_stamp;
 } undo_start;
 

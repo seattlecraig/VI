@@ -296,7 +296,7 @@ char            *Comspec;
  * misc data
  */
 int             WrapMargin;
-short           *StatusSections;
+int             *StatusSections;
 int             NumStatusSections;
 vi_rc           LastRetCode;
 vi_rc           LastRC;
@@ -344,8 +344,8 @@ int             MaxWindowTileY = 1;
 vi_color        MoveColor = CYAN;
 vi_color        ResizeColor = YELLOW;
 vi_color        InactiveWindowColor = WHITE;
-short           WindMaxWidth = 80;
-short           WindMaxHeight = 25;
+int             WindMaxWidth = 80;
+int             WindMaxHeight = 25;
 int             ToolBarButtonHeight = 24;
 int             ToolBarButtonWidth = 24;
 vi_color        ToolBarColor = BLUE;

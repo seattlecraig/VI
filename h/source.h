@@ -115,20 +115,20 @@ typedef struct cs_entry {
     label               alt;
     label               end;
     cstype              type;
-    short               srcline;
+    int                 srcline;
 } cs_entry;
 
 struct sfile;
 
 typedef struct labels {
-    short           cnt;
+    int             cnt;
     char            **name;
     struct sfile    **pos;
 } labels;
 
 typedef struct vars {
     struct vars *next, *prev;
-    short       len;
+    int         len;
     char        *value;
     char        name[1];
 } vars;

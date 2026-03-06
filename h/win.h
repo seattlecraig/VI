@@ -57,14 +57,14 @@
 typedef struct wind {
     vi_color    border_color1, border_color2;
     vi_color    text_color, background_color;
-    short       x1, y1, x2, y2, width, height;
+    int         x1, y1, x2, y2, width, height;
     char        *text;
     char        *overlap;
     char        *whooverlapping;
-    short       text_lines, text_cols;
+    int         text_lines, text_cols;
     char        *title;
     char        *borderdata;
-    short       bordercol;
+    int         bordercol;
     window_id   id;
     unsigned    isswapped           : 1;
     unsigned    accessed            : 1;

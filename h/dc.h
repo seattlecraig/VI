@@ -38,10 +38,10 @@
 
 typedef struct dc_line {
     // Windows & text mode
-    short       display : 1;    // line needs to be redisplayed
+    int         display : 1;    // line needs to be redisplayed
 
     // Windows only
-    short       valid : 1;      // cache reflects what is on screen
+    int         valid : 1;      // cache reflects what is on screen
     ss_block    *ss;
     ss_flags    flags;
     int         start_col;

@@ -111,6 +111,15 @@ void ScreenInit( void )
     char                        tmp[256];
 
     /*
+     * Force console output code page to 437 (OEM/DOS). WriteConsoleOutput
+     * uses AsciiChar interpreted via this code page. If a previous program
+     * enabled VT mode, the code page may have been changed to 65001 (UTF-8),
+     * which causes CP437 box-drawing bytes (0xDA, 0xB3, etc.) to render
+     * as diamond-question-mark replacement characters.
+     */
+    SetConsoleOutputCP( 437 );
+
+    /*
      * Open CONIN$ and CONOUT$ explicitly. These always refer to the
      * actual console, even when stdout/stdin are redirected (ConPTY,
      * VS debugger, piped output, etc).
@@ -118,7 +127,11 @@ void ScreenInit( void )
     InputHandle = CreateFile( "CONIN$", GENERIC_READ | GENERIC_WRITE,
                               FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
                               OPEN_EXISTING, 0, NULL );
-    SetConsoleMode( InputHandle, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT );
+    /* ENABLE_EXTENDED_FLAGS without ENABLE_QUICK_EDIT_MODE disables the
+     * console's built-in mouse handling (text selection, wheel scrolling
+     * the buffer). All mouse events go to the application instead. */
+    SetConsoleMode( InputHandle, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT
+                                 | ENABLE_WINDOW_INPUT | ENABLE_EXTENDED_FLAGS );
 
     OutputHandle = CreateFile( "CONOUT$", GENERIC_READ | GENERIC_WRITE,
                                FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
@@ -187,7 +200,7 @@ void ScreenInit( void )
  * Reallocates the screen buffer, updates global size variables, and
  * triggers a full redraw of all editor windows at the new size.
  */
-void HandleConsoleResize( short newW, short newH )
+void HandleConsoleResize( int newW, int newH )
 {
     COORD                       bufSize;
     DWORD                       safeSize;

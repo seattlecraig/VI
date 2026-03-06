@@ -602,7 +602,7 @@ static vi_rc processSetToken( int j, char *value, int *winflag, bool isnonbool )
                     break;
                 }
                 StatusSections = MemReAlloc( StatusSections,
-                                    sizeof( short ) * (NumStatusSections + 1) );
+                                    sizeof( int ) * (NumStatusSections + 1) );
                 StatusSections[NumStatusSections] = k;
                 NumStatusSections++;
                 if( NextWord1( value, fn ) <= 0 ) {
@@ -646,11 +646,11 @@ static vi_rc processSetToken( int j, char *value, int *winflag, bool isnonbool )
             if( clr > MaxTileColors ) {
                 return( ERR_INVALID_SET_COMMAND );
             }
-            if( NextWord1( name, fn ) <= 0 ) {
+            if( NextWord1( value, fn ) <= 0 ) {
                 return( ERR_INVALID_SET_COMMAND );
             }
             TileColors[clr].foreground = atoi( fn );
-            if( NextWord1( name, fn ) <= 0 ) {
+            if( NextWord1( value, fn ) <= 0 ) {
                 return( ERR_INVALID_SET_COMMAND );
             }
             TileColors[clr].background = atoi( fn );

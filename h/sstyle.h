@@ -71,8 +71,8 @@ typedef enum syntax_element {
 /*----- STRUCTURES -----*/
 typedef struct ss_block {
     syntax_element  type;
-    short           end;
-    short           len;
+    int             end;
+    int             len;
 #ifdef __WIN__
     // offset of start of following block
     int             offset;

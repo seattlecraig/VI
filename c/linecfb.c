@@ -103,10 +103,10 @@ static int createLine( char *res )
  * CreateLinesFromBuffer - create a set of lines from specified buffer
  */
 bool CreateLinesFromBuffer( int cnt, line_list *linelist, int *used,
-                            int *lcnt, short *bytecnt )
+                            int *lcnt, int *bytecnt )
 {
     int         curr, copylen, total, tmpmio;
-    short       bcnt, llcnt;
+    int         bcnt, llcnt;
     char        *tmpbuff;
 
     total = bcnt = copylen = llcnt = curr = 0;

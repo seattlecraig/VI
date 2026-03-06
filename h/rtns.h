@@ -477,7 +477,7 @@ void    KeyAddString( char *str );
 void    AddCurrentMouseEvent( void );
 
 /* linecfb.c */
-bool    CreateLinesFromBuffer( int, line_list *, int *, int *, short * );
+bool    CreateLinesFromBuffer( int, line_list *, int *, int *, int * );
 
 /* linedel.c */
 void    UpdateLineNumbers( linenum amt, fcb *cfcb  );
@@ -789,7 +789,7 @@ int     RealCursorPositionOnLine( linenum, int );
 int     WinRealCursorPosition( char *, int );
 int     WinVirtualCursorPosition( char *, int );
 int     VirtualLineLen( char * );
-bool    AddLeadingTabSpace( short *, char *, int );
+bool    AddLeadingTabSpace( int *, char *, int );
 bool    ConvertSpacesToTabsUpToColumn( int, char *, int, char *, int );
 
 /* tags.c */

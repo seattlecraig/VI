@@ -30,13 +30,13 @@
 
 
 // screen color/attrib functions
-extern void             BIOSSetColorRegister( short, char, char, char );
-extern long             BIOSGetColorRegister( short );
+extern void             BIOSSetColorRegister( int, char, char, char );
+extern long             BIOSGetColorRegister( int );
 extern void             BIOSGetColorPalette( void _FAR * );
 extern void             BIOSSetBlinkAttr( void );
 extern void             BIOSSetNoBlinkAttr( void );
 // screen cursor functions
-extern short            BIOSGetCursor( char );
+extern int              BIOSGetCursor( char );
 extern void             BIOSSetCursor( char, char, char );
 extern void             BIOSNewCursor( char, char );
 // screen info functions

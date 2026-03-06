@@ -425,7 +425,7 @@ int VirtualLineLen( char *buff )
 /*
  * AddLeadingTabSpace - make leading spaces tabs (if possible)
  */
-bool AddLeadingTabSpace( short *len, char *buff, int amount )
+bool AddLeadingTabSpace( int *len, char *buff, int amount )
 {
     char        *tmp;
     int         start = 0, i = 0;

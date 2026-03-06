@@ -100,8 +100,20 @@ static vi_rc getDir( char *dname, bool want_all_dirs )
         MemFree2( &DirFiles[i] );
     }
     DirFileCount = 0;
+    {
+        FILE *dbg = fopen( "vi_filecomplete_debug.txt", "a" );
+        if( dbg ) {
+            fprintf( dbg, "getDir: path='%s' wild='%s'\n", path, wild );
+            fclose( dbg );
+        }
+    }
     d = opendir( path );
     if( d == NULL ) {
+        FILE *dbg = fopen( "vi_filecomplete_debug.txt", "a" );
+        if( dbg ) {
+            fprintf( dbg, "getDir: opendir FAILED\n" );
+            fclose( dbg );
+        }
         FileMatchFini();
         return( ERR_FILE_NOT_FOUND );
     }
@@ -135,6 +147,11 @@ static vi_rc getDir( char *dname, bool want_all_dirs )
 #endif
         if( !(want_all_dirs && is_subdir) ) {
             if( !FileMatch( nd->d_name ) ) {
+                FILE *dbg = fopen( "vi_filecomplete_debug.txt", "a" );
+                if( dbg ) {
+                    fprintf( dbg, "getDir: FileMatch REJECTED '%s'\n", nd->d_name );
+                    fclose( dbg );
+                }
                 continue;
             }
         }

@@ -107,10 +107,10 @@ extern COORD    BSize;
 #pragma warning( disable : 4100 ) /* unreferenced formal parameter */
 #endif
 void BIOSGetColorPalette( void _FAR *a ) {}
-long BIOSGetColorRegister( short a ) { return( 0 ); }
+long BIOSGetColorRegister( int a ) { return( 0 ); }
 void BIOSSetNoBlinkAttr( void ) {}
 void BIOSSetBlinkAttr( void ) {}
-void BIOSSetColorRegister( short reg, char r, char g, char b ) {}
+void BIOSSetColorRegister( int reg, char r, char g, char b ) {}
 #ifdef __WATCOMC__
 #pragma on( unreferenced );
 #else
@@ -139,9 +139,9 @@ void BIOSSetCursor( char page, char row, char col )
 /*
  * BIOSGetCursor - return current cursor postion
  */
-short BIOSGetCursor( char page )
+int BIOSGetCursor( char page )
 {
-    short       res;
+    int         res;
 
     page = page;
     res = (_cpos.Y << 8) + _cpos.X;
@@ -161,7 +161,7 @@ static BOOL eventWeWant( INPUT_RECORD *ir )
     extern int      CurrMouseStatus;
     extern int      CurrMouseCol;
     extern int      CurrMouseRow;
-    static short    alt_numpad_number;
+    static int      alt_numpad_number;
 
     if( ir->EventType == MOUSE_EVENT ) {
         CurrMouseCol = ir->Event.MouseEvent.dwMousePosition.X;
@@ -182,7 +182,7 @@ static BOOL eventWeWant( INPUT_RECORD *ir )
      * new size, recalculate window positions, and redraw everything.
      */
     if( ir->EventType == WINDOW_BUFFER_SIZE_EVENT ) {
-        extern void HandleConsoleResize( short newW, short newH );
+        extern void HandleConsoleResize( int newW, int newH );
         HandleConsoleResize(
             ir->Event.WindowBufferSizeEvent.dwSize.X,
             ir->Event.WindowBufferSizeEvent.dwSize.Y );

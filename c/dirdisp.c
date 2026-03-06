@@ -128,9 +128,29 @@ static vi_rc doFileComplete( char *data, int start, int max, bool getnew,
         lastFilec = -1;
         buff[k++] = '*';
         buff[k] = 0;
+        {
+            FILE *dbg = fopen( "vi_filecomplete_debug.txt", "w" );
+            if( dbg ) {
+                fprintf( dbg, "doFileComplete: start=%d i=%d newstart=%d buff='%s' data='%s'\n",
+                    start, i, newstart, buff, data );
+                fclose( dbg );
+            }
+        }
         rc = GetSortDir( buff, FALSE );
         if( rc != ERR_NO_ERR ) {
+            FILE *dbg = fopen( "vi_filecomplete_debug.txt", "a" );
+            if( dbg ) {
+                fprintf( dbg, "GetSortDir FAILED rc=%d\n", rc );
+                fclose( dbg );
+            }
             return( rc );
+        }
+        {
+            FILE *dbg = fopen( "vi_filecomplete_debug.txt", "a" );
+            if( dbg ) {
+                fprintf( dbg, "GetSortDir OK, DirFileCount=%d\n", DirFileCount );
+                fclose( dbg );
+            }
         }
         /*
          * remove any crap from the list
@@ -144,6 +164,13 @@ static vi_rc doFileComplete( char *data, int start, int max, bool getnew,
                 }
                 i--;
                 DirFileCount--;
+            }
+        }
+        {
+            FILE *dbg = fopen( "vi_filecomplete_debug.txt", "a" );
+            if( dbg ) {
+                fprintf( dbg, "After filter, DirFileCount=%d\n", DirFileCount );
+                fclose( dbg );
             }
         }
 

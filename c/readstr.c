@@ -684,7 +684,7 @@ static bool getStringInWindow( input_buffer *input )
 
     ReadingAString = TRUE;
     initInput( input );
-    input->last_str = alloca( input->buffer_length );
+    input->last_str = MemAlloc( input->buffer_length );
     memset( input->last_str, 0, input->buffer_length );
     if( input->history != NULL ) {
         input->curr_hist = input->history->curr;
@@ -720,6 +720,7 @@ static bool getStringInWindow( input_buffer *input )
              */
             FinishFileComplete();
             ReadingAString = FALSE;
+            MemFree( input->last_str );
             return( event != VI_KEY( ESC ) );
         case VI_KEY( INS ):
             input->overstrike = !input->overstrike;

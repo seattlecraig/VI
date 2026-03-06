@@ -30,23 +30,64 @@
 
 
 #include "vi.h"
-#include "walloca.h"
-#include "rxsupp.h"
+#include <ctype.h>
 
-static regexp  *cRx;
+static char *cWild;
+
+/*
+ * wildMatch - simple recursive wildcard matching
+ *
+ * Supports '*' (match zero or more chars) and '?' (match one char).
+ * Case-insensitive on non-Unix platforms.
+ */
+static bool wildMatch( const char *pattern, const char *name )
+{
+    while( *pattern ) {
+        if( *pattern == '*' ) {
+            pattern++;
+            /* skip consecutive stars */
+            while( *pattern == '*' ) {
+                pattern++;
+            }
+            if( *pattern == '\0' ) {
+                return( TRUE );
+            }
+            while( *name ) {
+                if( wildMatch( pattern, name ) ) {
+                    return( TRUE );
+                }
+                name++;
+            }
+            return( FALSE );
+        }
+        if( *name == '\0' ) {
+            return( FALSE );
+        }
+        if( *pattern == '?' ) {
+            /* '?' matches any single character */
+        } else {
+#ifdef __UNIX__
+            if( *pattern != *name ) {
+                return( FALSE );
+            }
+#else
+            if( tolower( (unsigned char)*pattern ) != tolower( (unsigned char)*name ) ) {
+                return( FALSE );
+            }
+#endif
+        }
+        pattern++;
+        name++;
+    }
+    return( *name == '\0' );
+}
 
 /*
  * FileMatch - check if a file matches a wild card
  */
 bool FileMatch( char *name )
 {
-    int i;
-
-    i = RegExec( cRx, name, TRUE );
-    if( i ) {
-        return( TRUE );
-    }
-    return( FALSE );
+    return( wildMatch( cWild, name ) );
 
 } /* FileMatch */
 
@@ -55,53 +96,8 @@ bool FileMatch( char *name )
  */
 vi_rc FileMatchInit( char *wild )
 {
-    char        *tomatch;
-    int         i, j, len;
-
-    RegExpAttrSave( TRUE, "." );
-
-    /*
-     * compute required size
-     */
-    j = 3;
-    len = strlen( wild );
-    for( i = 0; i < len; i++ ) {
-        if( wild[i] == '?' ) {
-            j += 2;
-        } else if( wild[i] == '*' ) {
-            j += 3;
-        } else {
-            j++;
-        }
-    }
-    tomatch = alloca( j );
-
-    /*
-     * build match string
-     */
-    tomatch[0] = '^';
-    j = 1;
-    len = strlen( wild );
-    for( i = 0; i < len; i++ ) {
-        if( wild[i] == '?' ) {
-            tomatch[j++] = '\\';
-            tomatch[j++] = '.';
-            continue;
-        }
-        if( wild[i] == '*' ) {
-            tomatch[j++] = '\\';
-            tomatch[j++] = '.';
-        }
-        tomatch[j++] = wild[i];
-    }
-    tomatch[j++] = '$';
-    tomatch[j] = 0;
-
-    cRx = RegComp( tomatch );
-    if( RegExpError ) {
-        FileMatchFini();
-        return( RegExpError );
-    }
+    cWild = MemAlloc( strlen( wild ) + 1 );
+    strcpy( cWild, wild );
     return( ERR_NO_ERR );
 
 } /* FileMatchInit */
@@ -111,7 +107,7 @@ vi_rc FileMatchInit( char *wild )
  */
 void FileMatchFini( void )
 {
-    RegExpAttrRestore();
-    MemFree( cRx );
+    MemFree( cWild );
+    cWild = NULL;
 
 } /* FileMatchFini */

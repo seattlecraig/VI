@@ -152,7 +152,7 @@ extern window_info  activemenu_info, greyedmenu_info, activegreyedmenu_info;
 
 /* misc data */
 extern int              WrapMargin;
-extern short            *StatusSections;
+extern int              *StatusSections;
 extern int              NumStatusSections;
 extern int              SystemRC;
 extern char             *CommandBuffer;
@@ -199,7 +199,7 @@ extern char         ScrollBarChar;
 extern int          ScrollBarCharColor;
 extern int          ClockX, ClockY;
 extern int          SpinX, SpinY;
-extern short        WindMaxWidth, WindMaxHeight;
+extern int          WindMaxWidth, WindMaxHeight;
 extern int          CurrentStatusColumn;
 extern char         EndOfLineChar;
 
