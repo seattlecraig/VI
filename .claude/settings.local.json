@@ -14,7 +14,14 @@
       "Bash(D:/GitHub/vi/msvc/bin/Debug/Win32/vi.exe:*)",
       "Bash(timeout 3 D:/GitHub/vi/msvc/bin/Debug/Win32/vi.exe:*)",
       "Bash(taskkill:*)",
-      "Bash(grep:*)"
+      "Bash(grep:*)",
+      "WebSearch",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:jpsoft.com)",
+      "Bash(cmd:*)",
+      "Bash(\"/c/Program Files/Microsoft Visual Studio/2022/Professional/MSBuild/Current/Bin/MSBuild.exe\":*)",
+      "Bash(MSYS_NO_PATHCONV=1 \"$MSBUILDFULL\":*)",
+      "Bash(export:*)"
     ]
   }
 }

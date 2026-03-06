@@ -34,6 +34,7 @@
 #include "win.h"
 #include "dosx.h"
 #include "vibios.h"
+#include "dc.h"
 
 HANDLE  InputHandle, OutputHandle;
 COORD   BSize;
@@ -98,29 +99,72 @@ static char *oldConTitle;
 
 /*
  * ScreenInit - get screen info
+ *
+ * Uses the console's own screen buffer directly (no CreateConsoleScreenBuffer)
+ * so the editor always matches the actual console window size. Enables
+ * ENABLE_WINDOW_INPUT so we receive resize events.
  */
 void ScreenInit( void )
 {
     DWORD                       size;
-    CONSOLE_SCREEN_BUFFER_INFO  sbi;
+    COORD                       bufSize;
     char                        tmp[256];
 
+    /*
+     * Open CONIN$ and CONOUT$ explicitly. These always refer to the
+     * actual console, even when stdout/stdin are redirected (ConPTY,
+     * VS debugger, piped output, etc).
+     */
     InputHandle = CreateFile( "CONIN$", GENERIC_READ | GENERIC_WRITE,
                               FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
                               OPEN_EXISTING, 0, NULL );
-    SetConsoleMode( InputHandle, ENABLE_MOUSE_INPUT | ENABLE_LINE_INPUT |
-                                 ENABLE_ECHO_INPUT | ENABLE_PROCESSED_INPUT );
+    SetConsoleMode( InputHandle, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT | ENABLE_WINDOW_INPUT );
 
-    OutputHandle = CreateConsoleScreenBuffer( GENERIC_READ | GENERIC_WRITE,
-                                              0, NULL, CONSOLE_TEXTMODE_BUFFER, NULL );
-    SetConsoleMode( OutputHandle, 0 );
-    // SetConsoleActiveScreenBuffer( OutputHandle );
+    OutputHandle = CreateFile( "CONOUT$", GENERIC_READ | GENERIC_WRITE,
+                               FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+                               OPEN_EXISTING, 0, NULL );
 
-    GetConsoleScreenBufferInfo( OutputHandle, &sbi );
-    WindMaxWidth = sbi.dwMaximumWindowSize.X;
-    WindMaxHeight = sbi.dwMaximumWindowSize.Y;
+    /*
+     * Get the console screen buffer dimensions.
+     *
+     * dwSize gives the buffer size in character cells. In a normal
+     * console this matches the visible window. Under broken ConPTY
+     * (VS debugger) it can return pixel-resolution values; fall back
+     * to 120x30 in that case.
+     */
+    {
+        CONSOLE_SCREEN_BUFFER_INFO  sbi;
+        FILE *dbgf;
+
+        memset( &sbi, 0, sizeof( sbi ) );
+        GetConsoleScreenBufferInfo( OutputHandle, &sbi );
+
+        WindMaxWidth  = sbi.srWindow.Right  - sbi.srWindow.Left + 1;
+        WindMaxHeight = sbi.srWindow.Bottom - sbi.srWindow.Top  + 1;
+
+        /* Sanity check for broken ConPTY (VS debugger) */
+        if( WindMaxWidth > 1000 || WindMaxHeight > 1000 ) {
+            WindMaxWidth  = 120;
+            WindMaxHeight = 30;
+        }
+
+        dbgf = fopen( "vi_screen_debug.txt", "w" );
+        if( dbgf != NULL ) {
+            fprintf( dbgf, "INIT: dwSize=%dx%d srWindow=%dx%d using=%dx%d\n",
+                sbi.dwSize.X, sbi.dwSize.Y,
+                sbi.srWindow.Right - sbi.srWindow.Left + 1,
+                sbi.srWindow.Bottom - sbi.srWindow.Top + 1,
+                WindMaxWidth, WindMaxHeight );
+            fclose( dbgf );
+        }
+    }
     BSize.X = WindMaxWidth;
     BSize.Y = WindMaxHeight;
+
+    /* Set buffer to exactly match the window — no scrollbars */
+    bufSize.X = WindMaxWidth;
+    bufSize.Y = WindMaxHeight;
+    SetConsoleScreenBufferSize( OutputHandle, bufSize );
 
     EditFlags.Color = TRUE;
 
@@ -136,6 +180,104 @@ void ScreenInit( void )
     }
 
 } /* ScreenInit */
+
+/*
+ * HandleConsoleResize - called when the console window size changes.
+ *
+ * Reallocates the screen buffer, updates global size variables, and
+ * triggers a full redraw of all editor windows at the new size.
+ */
+void HandleConsoleResize( short newW, short newH )
+{
+    COORD                       bufSize;
+    DWORD                       safeSize;
+    int                         maxW, maxH;
+    int                         i;
+    FILE                        *dbgf;
+    static bool                 inResize = FALSE;
+
+    /* Guard against re-entrancy: SetConsoleScreenBufferSize generates
+     * another WINDOW_BUFFER_SIZE_EVENT which would call us again. */
+    if( inResize ) {
+        return;
+    }
+
+    /* Sanity check */
+    if( newW <= 0 || newH <= 0 || newW > 500 || newH > 300 ) {
+        return;
+    }
+
+    /* Nothing to do if size hasn't actually changed */
+    if( newW == WindMaxWidth && newH == WindMaxHeight ) {
+        return;
+    }
+
+    inResize = TRUE;
+
+    dbgf = fopen( "vi_screen_debug.txt", "a" );
+    if( dbgf != NULL ) {
+        fprintf( dbgf, "RESIZE: old=%dx%d new=%dx%d\n",
+            WindMaxWidth, WindMaxHeight, newW, newH );
+        fclose( dbgf );
+    }
+
+    /*
+     * Allocate buffers large enough for BOTH old and new dimensions.
+     * During the transition, old windows have stale coordinates that
+     * could exceed the new screen size. The oversized buffer prevents
+     * out-of-bounds writes when those windows are closed/recreated.
+     */
+    maxW = ( newW > WindMaxWidth )  ? newW : WindMaxWidth;
+    maxH = ( newH > WindMaxHeight ) ? newH : WindMaxHeight;
+    safeSize = maxW * maxH * sizeof( char_info );
+
+    free( Scrn );
+    Scrn = malloc( safeSize );
+    memset( Scrn, 0, safeSize );
+
+    MemFree( ScreenImage );
+    ScreenImage = MemAlloc( maxW * maxH );
+    for( i = 0; i < maxW * maxH; i++ ) {
+        ScreenImage[i] = NO_CHAR;
+    }
+
+    /* Now update global screen dimensions */
+    WindMaxWidth  = newW;
+    WindMaxHeight = newH;
+    BSize.X = WindMaxWidth;
+    BSize.Y = WindMaxHeight;
+
+    /* Set console screen buffer to match the new window size so
+     * WriteConsoleOutput covers the full visible area. */
+    bufSize.X = WindMaxWidth;
+    bufSize.Y = WindMaxHeight;
+    SetConsoleScreenBufferSize( OutputHandle, bufSize );
+
+    /* Recalculate all window positions based on new screen size */
+    SetWindowSizes();
+
+    /* Resize and redraw all windows */
+    if( EditFlags.WindowsStarted ) {
+        ResetAllWindows();
+        NewMessageWindow();
+        if( EditFlags.StatusInfo ) {
+            NewStatusWindow();
+        }
+        ReDisplayScreen();
+
+        /* DCDisplayAllLines (called by ReDisplayScreen) only marks
+         * lines dirty. DCUpdate actually renders them to the Scrn
+         * buffer. Normally called from the edit loop, but we need
+         * it here so the resize is visible immediately. */
+        DCUpdate();
+
+        /* Force a full-screen flush to the console. */
+        MyVioShowBuf( 0, WindMaxWidth * WindMaxHeight * sizeof( char_info ) );
+    }
+
+    inResize = FALSE;
+
+} /* HandleConsoleResize */
 
 /*
  * ScreenFini - finished with console

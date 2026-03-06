@@ -177,6 +177,17 @@ static BOOL eventWeWant( INPUT_RECORD *ir )
         }
         return( TRUE );
     }
+    /*
+     * Handle console window resize events. Reallocate buffers at the
+     * new size, recalculate window positions, and redraw everything.
+     */
+    if( ir->EventType == WINDOW_BUFFER_SIZE_EVENT ) {
+        extern void HandleConsoleResize( short newW, short newH );
+        HandleConsoleResize(
+            ir->Event.WindowBufferSizeEvent.dwSize.X,
+            ir->Event.WindowBufferSizeEvent.dwSize.Y );
+        return( FALSE );
+    }
     if( ir->EventType != KEY_EVENT ) {
         return( FALSE );
     }

@@ -112,7 +112,7 @@ typedef enum {
 #define MAX_SCRIPT_LENGTH       2048
 #define MAX_MOUSE_SPEED         250
 #define MAX_OVERRIDE_KEY_BUFF   512
-#define MAX_STR                 256
+#define MAX_STR                 1024
 #define FGREP_BUFFSIZE          32000
 #define NUM_EDIT_OPTS           4
 #define EXTENSION_LENGTH        5
