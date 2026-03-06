@@ -47,6 +47,7 @@ static int          maxJ, perPage, maxPage, cPage;
 static bool         hasWrapped, isDone;
 static int          mouseFilec = -1;
 static char         strFmt[] = " %c%S";
+static int          nameWidth = NAMEWIDTH;  /* dynamic column width */
 
 static bool hasMouseHandler;
 
@@ -68,7 +69,7 @@ bool FileCompleteMouseHandler( window_id id, int win_x, int win_y )
         return( FALSE );
     }
 
-    mouseFilec = cPage + (win_x - 1) / NAMEWIDTH + (win_y - 1) * maxJ;
+    mouseFilec = cPage + (win_x - 1) / nameWidth + (win_y - 1) * maxJ;
 
     return( TRUE );
 
@@ -166,11 +167,24 @@ static vi_rc doFileComplete( char *data, int start, int max, bool getnew,
                 DirFileCount--;
             }
         }
+        /*
+         * compute dynamic column width from the longest filename,
+         * rounded up to the next multiple of NAMEWIDTH so columns
+         * stay aligned. +2 for the leading " x" prefix (space + dir marker).
+         */
         {
-            FILE *dbg = fopen( "vi_filecomplete_debug.txt", "a" );
-            if( dbg ) {
-                fprintf( dbg, "After filter, DirFileCount=%d\n", DirFileCount );
-                fclose( dbg );
+            int longest = 0;
+            for( i = 0; i < DirFileCount; i++ ) {
+                int nl = strlen( DirFiles[i]->name );
+                if( nl > longest ) {
+                    longest = nl;
+                }
+            }
+            longest += 2;  /* " x" prefix */
+            /* round up to next multiple of NAMEWIDTH */
+            nameWidth = ((longest + NAMEWIDTH - 1) / NAMEWIDTH) * NAMEWIDTH;
+            if( nameWidth < NAMEWIDTH ) {
+                nameWidth = NAMEWIDTH;
             }
         }
 
@@ -238,7 +252,7 @@ static int calcColumns( HWND hwnd )
     w = WINDOW_FROM_ID( hwnd );
     GetClientRect( hwnd, &rect );
     columns = rect.right - rect.left;
-    columns = columns / (NAMEWIDTH * FontAverageWidth( WIN_FONT( w ) ));
+    columns = columns / (nameWidth * FontAverageWidth( WIN_FONT( w ) ));
     return( columns );
 }
 
@@ -254,7 +268,7 @@ void FileCompleteMouseClick( HWND hwnd, int x, int y, BOOL dclick )
     /* figure out which file_name the user clicked on */
     columns = calcColumns( hwnd );
     GetClientRect( hwnd, &rect );
-    column_width = NAMEWIDTH * FontAverageWidth( WIN_FONT( w ) );
+    column_width = nameWidth * FontAverageWidth( WIN_FONT( w ) );
     column_height = FontHeight( WIN_FONT( w ) );
     left_margin = (rect.right - rect.left - column_width * columns) >> 1;
     if( x < left_margin || x + left_margin > rect.right ) {
@@ -284,7 +298,7 @@ static void parseFileName( int i, char *buffer )
         }
         MySprintf( buffer, strFmt, ch, DirFiles[i]->name );
     }
-    buffer[NAMEWIDTH] = 0;
+    buffer[nameWidth] = 0;
 }
 
 #define ROW( i )    ((i) / maxJ)
@@ -326,7 +340,7 @@ void displayFiles( void )
 
     font_height = FontHeight( WIN_FONT( w ) );
     GetClientRect( dirWin, &rect );
-    column_width = NAMEWIDTH * FontAverageWidth( WIN_FONT( w ) );
+    column_width = nameWidth * FontAverageWidth( WIN_FONT( w ) );
     outer_bound = rect.right;
     left_edge = rect.right - rect.left;
     left_edge -= maxJ * column_width;
@@ -379,7 +393,7 @@ void displayFiles( void )
  */
 static void displayFiles( void )
 {
-    char        tmp[FILENAME_MAX], tmp2[FILENAME_MAX], dirc;
+    char        tmp[1024], tmp2[FILENAME_MAX], dirc;
     int         j, i, k, hilite = -1, z;
     int         st, end, l=1;
 
@@ -413,7 +427,17 @@ static void displayFiles( void )
                 dirc = ' ';
             }
             MySprintf( tmp2, strFmt, dirc, DirFiles[i]->name );
-            tmp2[NAMEWIDTH] = 0;
+        }
+        /* truncate or pad to exactly nameWidth characters */
+        {
+            int len = strlen( tmp2 );
+            if( len > nameWidth ) {
+                len = nameWidth;
+            }
+            while( len < nameWidth ) {
+                tmp2[len++] = ' ';
+            }
+            tmp2[nameWidth] = 0;
         }
         strcat( tmp, tmp2 );
         j++;
@@ -421,7 +445,7 @@ static void displayFiles( void )
         if( j == maxJ || i == (end - 1) ) {
             DisplayLineInWindow( dirWin, l++, tmp );
             if( hilite >= 0 ) {
-                j = hilite * NAMEWIDTH;
+                j = hilite * nameWidth;
                 if( DirFiles[lastFilec]->attr & _A_SUBDIR ) {
                     dirc = FILE_SEP;
                 } else {
@@ -476,7 +500,7 @@ vi_rc StartFileComplete( char *data, int start, int max, int what )
 #ifdef __WIN__
     maxJ = calcColumns( dirWin );
 #else
-    maxJ = WindowAuxInfo( dirWin, WIND_INFO_TEXT_COLS) / NAMEWIDTH;
+    maxJ = WindowAuxInfo( dirWin, WIND_INFO_TEXT_COLS) / nameWidth;
 #endif
     maxl = WindowAuxInfo( dirWin, WIND_INFO_TEXT_LINES) - 1;
     perPage = (maxl + 1) * maxJ;
