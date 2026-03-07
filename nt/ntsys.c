@@ -37,6 +37,7 @@
 #include "dc.h"
 
 HANDLE  InputHandle, OutputHandle;
+static HANDLE  OrigOutputHandle;    /* original screen buffer, restored on exit */
 COORD   BSize;
 
 extern int PageCnt;
@@ -133,23 +134,24 @@ void ScreenInit( void )
     SetConsoleMode( InputHandle, ENABLE_PROCESSED_INPUT | ENABLE_MOUSE_INPUT
                                  | ENABLE_WINDOW_INPUT | ENABLE_EXTENDED_FLAGS );
 
-    OutputHandle = CreateFile( "CONOUT$", GENERIC_READ | GENERIC_WRITE,
-                               FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
-                               OPEN_EXISTING, 0, NULL );
+    /*
+     * Save the original console screen buffer so we can restore it
+     * on exit. This preserves the shell's scrollback history and
+     * prior output — the editor paints on its own private buffer.
+     */
+    OrigOutputHandle = CreateFile( "CONOUT$", GENERIC_READ | GENERIC_WRITE,
+                                    FILE_SHARE_READ | FILE_SHARE_WRITE, NULL,
+                                    OPEN_EXISTING, 0, NULL );
 
     /*
-     * Get the console screen buffer dimensions.
-     *
-     * dwSize gives the buffer size in character cells. In a normal
-     * console this matches the visible window. Under broken ConPTY
-     * (VS debugger) it can return pixel-resolution values; fall back
-     * to 120x30 in that case.
+     * Get the console window dimensions from the original buffer
+     * BEFORE creating our private buffer.
      */
     {
         CONSOLE_SCREEN_BUFFER_INFO  sbi;
 
         memset( &sbi, 0, sizeof( sbi ) );
-        GetConsoleScreenBufferInfo( OutputHandle, &sbi );
+        GetConsoleScreenBufferInfo( OrigOutputHandle, &sbi );
 
         WindMaxWidth  = sbi.srWindow.Right  - sbi.srWindow.Left + 1;
         WindMaxHeight = sbi.srWindow.Bottom - sbi.srWindow.Top  + 1;
@@ -159,15 +161,28 @@ void ScreenInit( void )
             WindMaxWidth  = 120;
             WindMaxHeight = 30;
         }
-
     }
+
+    /*
+     * Create a private screen buffer for the editor. This is the
+     * "alternate screen" — when we exit, we switch back to
+     * OrigOutputHandle and the user's previous console content
+     * reappears untouched.
+     */
+    OutputHandle = CreateConsoleScreenBuffer( GENERIC_READ | GENERIC_WRITE,
+                                              FILE_SHARE_READ | FILE_SHARE_WRITE,
+                                              NULL, CONSOLE_TEXTMODE_BUFFER, NULL );
+
     BSize.X = WindMaxWidth;
     BSize.Y = WindMaxHeight;
 
-    /* Set buffer to exactly match the window — no scrollbars */
+    /* Set our buffer to exactly match the window — no scrollbars */
     bufSize.X = WindMaxWidth;
     bufSize.Y = WindMaxHeight;
     SetConsoleScreenBufferSize( OutputHandle, bufSize );
+
+    /* Make our buffer the active (visible) one */
+    SetConsoleActiveScreenBuffer( OutputHandle );
 
     EditFlags.Color = TRUE;
 
@@ -279,7 +294,13 @@ void HandleConsoleResize( int newW, int newH )
  */
 void ScreenFini( void )
 {
+    /* Switch back to the original console screen buffer.
+     * This restores the shell's previous output and scrollback
+     * history as if the editor was never there. */
+    SetConsoleActiveScreenBuffer( OrigOutputHandle );
+
     CloseHandle( OutputHandle );
+    CloseHandle( OrigOutputHandle );
     CloseHandle( InputHandle );
     SetConsoleTitle( oldConTitle );
 
