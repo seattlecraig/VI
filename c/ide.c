@@ -74,7 +74,7 @@ void IDEFini( void )
 void IDEGetKeys( void )
 {
     char        buff[MAX_STR];
-    char        path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
 
     if( !EditFlags.UseIDE ) {
         return;

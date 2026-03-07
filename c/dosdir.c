@@ -103,7 +103,7 @@ void GetFileInfo( direct_ent *tmp, struct dirent *nd, char *path )
  */
 void FormatFileEntry( direct_ent *file, char *res )
 {
-    char        buff[FILENAME_MAX], tmp[FILENAME_MAX];
+    char        buff[VI_MAX_PATH], tmp[VI_MAX_PATH];
     long        size;
 
     if( file->attr & _A_SUBDIR ) {

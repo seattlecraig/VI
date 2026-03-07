@@ -41,7 +41,7 @@ COORD   BSize;
 
 extern int PageCnt;
 
-static char oldDir[_MAX_PATH];
+static char oldDir[VI_MAX_PATH];
 
 /*
  * PushDirectory
@@ -50,7 +50,7 @@ void PushDirectory( char *orig )
 {
     orig = orig;
     oldDir[0] = 0;
-    GetCWD2( oldDir, _MAX_PATH );
+    GetCWD2( oldDir, VI_MAX_PATH );
 
 } /* PushDirectory */
 
@@ -147,7 +147,6 @@ void ScreenInit( void )
      */
     {
         CONSOLE_SCREEN_BUFFER_INFO  sbi;
-        FILE *dbgf;
 
         memset( &sbi, 0, sizeof( sbi ) );
         GetConsoleScreenBufferInfo( OutputHandle, &sbi );
@@ -161,15 +160,6 @@ void ScreenInit( void )
             WindMaxHeight = 30;
         }
 
-        dbgf = fopen( "vi_screen_debug.txt", "w" );
-        if( dbgf != NULL ) {
-            fprintf( dbgf, "INIT: dwSize=%dx%d srWindow=%dx%d using=%dx%d\n",
-                sbi.dwSize.X, sbi.dwSize.Y,
-                sbi.srWindow.Right - sbi.srWindow.Left + 1,
-                sbi.srWindow.Bottom - sbi.srWindow.Top + 1,
-                WindMaxWidth, WindMaxHeight );
-            fclose( dbgf );
-        }
     }
     BSize.X = WindMaxWidth;
     BSize.Y = WindMaxHeight;

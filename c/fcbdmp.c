@@ -34,6 +34,9 @@
     #include <i86.h>
 #endif
 #include "win.h"
+#ifdef __NT__
+    #include <psapi.h>
+#endif
 
 #ifdef DBG
 #include <malloc.h>
@@ -399,6 +402,64 @@ static char twoStr[] = "%Y%s";
 extern int maxStatic;
 //extern long __undocnt;
 
+#ifdef __NT__
+/*
+ * FormatCommas - format an unsigned long long with comma separators
+ *
+ * Writes the result into buf (must be at least 32 bytes).
+ * Returns pointer to buf.
+ */
+static char *FormatCommas( unsigned long long val, char *buf )
+{
+    char        raw[32];
+    int         rawLen, commas, totalLen, i, j;
+
+    sprintf( raw, "%llu", val );
+    rawLen = (int)strlen( raw );
+    commas = (rawLen - 1) / 3;
+    totalLen = rawLen + commas;
+    buf[totalLen] = 0;
+    j = totalLen - 1;
+    for( i = rawLen - 1; i >= 0; i-- ) {
+        buf[j--] = raw[i];
+        if( i > 0 && (rawLen - i) % 3 == 0 ) {
+            buf[j--] = ',';
+        }
+    }
+    return( buf );
+}
+
+/*
+ * FormatMemSize - format a byte count as a human-readable string
+ *
+ * Shows bytes with commas, plus a parenthetical with the best unit:
+ *   "1,073,741,824 bytes (1.00 GB)"
+ *   "4,096 bytes (4.00 KB)"
+ */
+static void FormatMemSize( unsigned long long bytes, char *out )
+{
+    char    commaStr[32];
+
+    FormatCommas( bytes, commaStr );
+
+    if( bytes >= (unsigned long long)1024 * 1024 * 1024 * 1024 ) {
+        sprintf( out, "%s bytes (%.2f TB)", commaStr,
+            (double)bytes / (1024.0 * 1024.0 * 1024.0 * 1024.0) );
+    } else if( bytes >= (unsigned long long)1024 * 1024 * 1024 ) {
+        sprintf( out, "%s bytes (%.2f GB)", commaStr,
+            (double)bytes / (1024.0 * 1024.0 * 1024.0) );
+    } else if( bytes >= (unsigned long long)1024 * 1024 ) {
+        sprintf( out, "%s bytes (%.2f MB)", commaStr,
+            (double)bytes / (1024.0 * 1024.0) );
+    } else if( bytes >= 1024 ) {
+        sprintf( out, "%s bytes (%.2f KB)", commaStr,
+            (double)bytes / 1024.0 );
+    } else {
+        sprintf( out, "%s bytes", commaStr );
+    }
+}
+#endif
+
 /*
  * DumpMemory - dump memory avaliable
  */
@@ -407,16 +468,53 @@ vi_rc DumpMemory( void )
     int         ln = 1;
     window_id   wn;
     window_info *wi;
+    vi_rc       rc;
+#ifdef __NT__
+    MEMORYSTATUSEX          memstat;
+    PROCESS_MEMORY_COUNTERS pmc;
+    unsigned long long      totalPhys, availPhys, availVirt, workingSet;
+#else
     char        tmp[128], tmp2[128];
 #if !defined( __WIN__ ) && !defined( __386__ ) && !defined( __OS2__ ) && \
     !defined( __UNIX__ ) && !defined( __ALPHA__ )
     long        mem1;
 #endif
     long        mem2;
-    vi_rc       rc;
+#endif
 
     wi = &filecw_info;
     rc = NewWindow2( &wn, wi );
+
+#ifdef __NT__
+    /* Get system memory info */
+    memstat.dwLength = sizeof( memstat );
+    GlobalMemoryStatusEx( &memstat );
+    totalPhys = memstat.ullTotalPhys;
+    availPhys = memstat.ullAvailPhys;
+    availVirt = memstat.ullAvailVirtual;
+
+    /* Get process memory info */
+    workingSet = 0;
+    memset( &pmc, 0, sizeof( pmc ) );
+    pmc.cb = sizeof( pmc );
+    if( GetProcessMemoryInfo( GetCurrentProcess(), &pmc, sizeof( pmc ) ) ) {
+        workingSet = pmc.WorkingSetSize;
+    }
+
+    {
+        char    fmtBuf[64];
+
+        FormatMemSize( totalPhys, fmtBuf );
+        WPrintfLine( wn, ln++, "Total Physical RAM:  %s", fmtBuf );
+        FormatMemSize( availPhys, fmtBuf );
+        WPrintfLine( wn, ln++, "Available Physical:  %s", fmtBuf );
+        FormatMemSize( availVirt, fmtBuf );
+        WPrintfLine( wn, ln++, "Available Virtual:   %s", fmtBuf );
+        FormatMemSize( workingSet, fmtBuf );
+        WPrintfLine( wn, ln++, "Process Working Set: %s", fmtBuf );
+    }
+    WPrintfLine( wn, ln++, "File CB's: %d", FcbBlocksInUse );
+#else
 #if defined(__OS2__ )
     WPrintfLine( wn, ln++, "Mem:  (unlimited) (maxStatic=%d)", maxStatic );
 #else
@@ -468,11 +566,9 @@ vi_rc DumpMemory( void )
     }
 #endif
     WPrintfLine( wn, ln++, twoStr, tmp, tmp2 );
-//    WPrintfLine( wn, ln++, "Reserved %l bytes of DOS memory", MinMemoryLeft );
 
     WPrintfLine( wn, ln++, "File CB's: %d", FcbBlocksInUse );
-//    WPrintfLine( wn, ln++, "File CB's: %d, Undo blocks=%l(%l bytes)", FcbBlocksInUse,
-//        __undocnt, __undocnt * sizeof( undo ) );
+#endif /* __NT__ */
 
     WPrintfLine( wn, ln + 1, MSG_PRESSANYKEY );
 

@@ -43,7 +43,7 @@ extern int      CurrentMenuNumber;
  */
 vi_rc SelectFileOpen( char *dir, char **result_ptr, char *mask, bool want_all_dirs )
 {
-    char                dd[FILENAME_MAX], cdir[FILENAME_MAX];
+    char                dd[VI_MAX_PATH], cdir[VI_MAX_PATH];
     int                 j;
     file                *cfile;
     fcb                 *cfcb;

@@ -272,7 +272,7 @@ vi_rc RunCommandLine( char *cl )
     int         n2f, n1f, dmt, tkn, flag;
     bool        test1;
     linenum     n1, n2;
-    char        st[FILENAME_MAX];
+    char        st[VI_MAX_PATH];
     info        *cinfo;
     long        val;
     jmp_buf     jmpaddr;
@@ -670,7 +670,7 @@ vi_rc RunCommandLine( char *cl )
 #if defined( __NT__ ) && !defined( __WIN__ )
             ExecCmd( NULL, NULL, NULL );
 #else
-            char foo[FILENAME_MAX];
+            char foo[VI_MAX_PATH];
 
             strcpy( foo, Comspec );
             ExecCmd( NULL, NULL, foo );
@@ -766,7 +766,7 @@ vi_rc RunCommandLine( char *cl )
                         fancy_find      *ff;
                         /* ff will be set to point at a static fancy find struct
                          * in the snoop module */
-                        char snoopbuf[FILENAME_MAX];
+                        char snoopbuf[VI_MAX_PATH];
 
                         if( !GetSnoopStringDialog( &ff ) ) {
                             return( ERR_NO_ERR );
@@ -894,9 +894,9 @@ vi_rc RunCommandLine( char *cl )
 #endif
             if( RCSQuerySystem( r ) != 0 ) {
                 if( GenericQueryBool( "File is read only, check out?" ) ) {
-                    char full1[FILENAME_MAX];
+                    char full1[VI_MAX_PATH];
 
-                    _fullpath( full1, CurrentFile->name, FILENAME_MAX );
+                    _fullpath( full1, CurrentFile->name, VI_MAX_PATH );
                     RCSSetPause( r, TRUE );
                     if( RCSCheckout( r, full1, NULL, NULL ) ) {
                         strcpy( dataBuff, CurrentFile->name );

@@ -40,7 +40,7 @@ int ExpandFileNames( char *p, char ***argv )
 {
     int         argc, i;
     char        drive[_MAX_DRIVE], directory[_MAX_DIR], name[_MAX_FNAME];
-    char        extin[_MAX_EXT], pathin[FILENAME_MAX];
+    char        extin[_MAX_EXT], pathin[VI_MAX_PATH];
     char        *start, *new;
     bool        wildcard;
     vi_rc       rc;

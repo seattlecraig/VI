@@ -132,8 +132,8 @@ static int readOnlyCheck( void )
  */
 vi_rc SaveFileAs( void )
 {
-    char    fn[FILENAME_MAX];
-    char    cmd[14 + FILENAME_MAX];
+    char    fn[VI_MAX_PATH];
+    char    cmd[14 + VI_MAX_PATH];
     vi_rc   rc;
 
     rc = SelectFileSave( fn );

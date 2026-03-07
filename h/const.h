@@ -85,6 +85,13 @@ typedef enum {
 #define MAX_NUM_STR     48
 
 /*
+ * Maximum path length. The C runtime's FILENAME_MAX / _MAX_PATH is 260,
+ * a legacy DOS limitation. Modern Windows supports paths up to 32,767
+ * characters.
+ */
+#define VI_MAX_PATH     32768
+
+/*
  * extra data per line: +4 because of swap file
  * considerations: +2 for c/r,l/f and +2 for extra line data
  */

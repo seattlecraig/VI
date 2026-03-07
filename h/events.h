@@ -421,7 +421,7 @@ vi_pick( VI_KEY( ALT_R ),        InvalidKey,          IMMenuKey,            Inva
 vi_pick( VI_KEY( ALT_S ),        InvalidKey,          IMMenuKey,            SanityCheck,             BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( ALT_T ),        InvalidKey,          IMMenuKey,            InvalidKey,              BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( ALT_U ),        InvalidKey,          IMMenuKey,            WalkUndo,                BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )
-vi_pick( VI_KEY( ALT_V ),        InvalidKey,          IMMenuKey,            InvalidKey,              BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )
+vi_pick( VI_KEY( ALT_V ),        InvalidKey,          IMMenuKey,            DoVersion,               BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( ALT_W ),        InvalidKey,          IMMenuKey,            InvalidKey,              BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( ALT_X ),        InvalidKey,          IMMenuKey,            EnterHexKey,             BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( ALT_Y ),        InvalidKey,          IMMenuKey,            InvalidKey,              BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0) )

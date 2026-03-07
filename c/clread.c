@@ -46,7 +46,7 @@ vi_rc ReadAFile( linenum afterwhich, char *name )
     long        bytecnt = 0;
     linenum     lnecnt = 0;
     status_type lastst;
-    char        *fn = MemAlloc( FILENAME_MAX );
+    char        *fn = MemAlloc( VI_MAX_PATH );
     vi_rc       rc;
 
     /*

@@ -53,8 +53,8 @@ static vi_rc getDir( char *dname, bool want_all_dirs )
     struct dirent       *nd;
     direct_ent          *tmp;
     int                 i, j, len;
-    char                wild[FILENAME_MAX];
-    char                path[FILENAME_MAX];
+    char                wild[VI_MAX_PATH];
+    char                path[VI_MAX_PATH];
     char                ch;
     bool                is_subdir;
     vi_rc               rc;

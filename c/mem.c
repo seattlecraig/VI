@@ -399,7 +399,7 @@ void DumpTRMEM( void )
 
 void InitTRMEM( void )
 {
-    char        file[FILENAME_MAX];
+    char        file[VI_MAX_PATH];
 
     strcpy( file, getenv( "EDPATH" ) );
     strcat( file, "\\trmem.out" );

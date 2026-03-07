@@ -170,7 +170,7 @@ static void fillFileType( HWND hwndDlg )
     HWND        hwndCB;
     ft_src      *fts;
     template_ll *template, *template1;
-    char        str[_MAX_PATH];
+    char        str[VI_MAX_PATH];
     int         strLen;
     int         index;
     info        envInfo, *oldCurrentInfo;
@@ -211,12 +211,12 @@ static void fillFileType( HWND hwndDlg )
 static void fillLanguage( HWND hwndDlg )
 {
     HWND    hwndCB;
-    char    str[_MAX_PATH];
+    char    str[VI_MAX_PATH];
     int     i;
 
     hwndCB = GetDlgItem( hwndDlg, SETFS_LANGUAGESELECT );
     for( i = VI_LANG_FIRST; i <= VI_LANG_LAST; i++ ) {
-        LoadString( GET_HINSTANCE( hwndDlg ), i, str, _MAX_PATH );
+        LoadString( GET_HINSTANCE( hwndDlg ), i, str, VI_MAX_PATH );
         SendMessage( hwndCB, CB_INSERTSTRING, -1, (LPARAM)str );
     }
 }

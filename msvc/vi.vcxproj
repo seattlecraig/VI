@@ -34,7 +34,6 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
-
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <ProjectGuid>{44996CDF-F3E0-46C6-8DBD-92C83A4A0E1F}</ProjectGuid>
@@ -42,9 +41,7 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
     <Keyword>Win32Proj</Keyword>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-
   <!-- Configuration-specific property sheets -->
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
@@ -72,10 +69,8 @@
     <CharacterSet>MultiByte</CharacterSet>
     <WholeProgramOptimization>true</WholeProgramOptimization>
   </PropertyGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
-
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
@@ -88,9 +83,7 @@
   <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-
   <PropertyGroup Label="UserMacros" />
-
   <!-- Output directories -->
   <PropertyGroup>
     <OutDir>$(SolutionDir)bin\$(Configuration)\$(Platform)\</OutDir>
@@ -98,7 +91,6 @@
     <TargetName>vi</TargetName>
     <TargetExt>.exe</TargetExt>
   </PropertyGroup>
-
   <!-- ============================================================ -->
   <!-- Compiler settings common to all configurations               -->
   <!-- ============================================================ -->
@@ -150,11 +142,10 @@
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>kernel32.lib;user32.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <StackReserveSize>131072</StackReserveSize>
+      <AdditionalDependencies>kernel32.lib;user32.lib;psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <StackReserveSize>8388608</StackReserveSize>
     </Link>
   </ItemDefinitionGroup>
-
   <!-- Debug-specific overrides -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Debug'">
     <ClCompile>
@@ -167,7 +158,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-
   <!-- Release-specific overrides -->
   <ItemDefinitionGroup Condition="'$(Configuration)'=='Release'">
     <ClCompile>
@@ -183,7 +173,6 @@
       <OptimizeReferences>true</OptimizeReferences>
     </Link>
   </ItemDefinitionGroup>
-
   <!-- ============================================================ -->
   <!-- Source files                                                  -->
   <!-- ============================================================ -->
@@ -200,7 +189,6 @@
     <ClCompile Include="..\c\addstr.c" />
     <ClCompile Include="..\c\llrtns.c" />
     <ClCompile Include="..\c\parse.c" />
-
     <!-- objects.mif: objtime -->
     <ClCompile Include="..\c\fcbems.c" />
     <ClCompile Include="..\c\fcbxms.c" />
@@ -248,7 +236,6 @@
     <ClCompile Include="..\c\sstyle_m.c" />
     <ClCompile Include="..\c\sstyle_p.c" />
     <ClCompile Include="..\c\rcs.c" />
-
     <!-- objects.mif: objsizeroot -->
     <ClCompile Include="..\c\name.c" />
     <ClCompile Include="..\c\key.c" />
@@ -256,7 +243,6 @@
     <ClCompile Include="..\c\pdata.c" />
     <ClCompile Include="..\c\exdata.c" />
     <ClCompile Include="..\c\srcdata.c" />
-
     <!-- objects.mif: objsize -->
     <ClCompile Include="..\c\xmem.c" />
     <ClCompile Include="..\c\fcbswap.c" />
@@ -331,17 +317,13 @@
     <ClCompile Include="..\c\tab_e_c.c" />
     <ClCompile Include="..\c\gencfg.c" />
     <ClCompile Include="..\c\fts.c" />
-
     <!-- objects.mif: objinit (init is in c\, getopt and autoenv are our stubs) -->
     <ClCompile Include="..\c\init.c" />
-
     <!-- objects.mif: version.obj (linked separately in original makefile) -->
     <ClCompile Include="..\c\version.c" />
-
     <!-- nt.mif: objntsize (dosdir and time are in c\, rest in nt\) -->
     <ClCompile Include="..\c\dosdir.c" />
     <ClCompile Include="..\c\time.c" />
-
     <!-- ======== nt\ directory: NT platform layer ======== -->
     <!-- nt.mif: objnttimeroot -->
     <ClCompile Include="..\nt\int.c" />
@@ -353,7 +335,6 @@
     <ClCompile Include="..\nt\ntmain.c" />
     <ClCompile Include="..\nt\ntmouse.c" />
     <ClCompile Include="..\nt\spawn.c" />
-
     <!-- ======== ui\ directory: Character-mode UI ======== -->
     <!-- ui.mif: objuitimeroot -->
     <ClCompile Include="..\ui\windisp.c" />
@@ -378,12 +359,10 @@
     <ClCompile Include="..\ui\wintica.c" />
     <ClCompile Include="..\ui\filesel.c" />
     <ClCompile Include="..\ui\menu.c" />
-
     <!-- ======== msvc\ directory: MSVC compatibility stubs ======== -->
     <ClCompile Include="getopt.c" />
     <ClCompile Include="autoenv.c" />
   </ItemGroup>
-
   <!-- ============================================================ -->
   <!-- Header files                                                 -->
   <!-- ============================================================ -->
@@ -436,7 +415,6 @@
     <ClInclude Include="..\h\win.h" />
     <ClInclude Include="..\h\winaux.h" />
     <ClInclude Include="..\h\xmem.h" />
-
     <!-- msvc\ directory: MSVC compatibility headers -->
     <ClInclude Include="banner.h" />
     <ClInclude Include="clibext.h" />
@@ -448,7 +426,6 @@
     <ClInclude Include="walloca.h" />
     <ClInclude Include="regexp.h" />
   </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
 </Project>

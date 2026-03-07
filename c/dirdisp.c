@@ -328,7 +328,7 @@ void displayFiles( void )
     window      *w;
     RECT        rect;
     type_style  *style;
-    char        buffer[FILENAME_MAX];
+    char        buffer[VI_MAX_PATH];
 
     if( BAD_ID( dirWin ) ) return;
     w = WINDOW_FROM_ID( dirWin );
@@ -393,7 +393,7 @@ void displayFiles( void )
  */
 static void displayFiles( void )
 {
-    char        tmp[1024], tmp2[FILENAME_MAX], dirc;
+    char        tmp[VI_MAX_PATH], tmp2[VI_MAX_PATH], dirc;
     int         j, i, k, hilite = -1, z;
     int         st, end, l=1;
 

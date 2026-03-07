@@ -37,7 +37,7 @@ extern void             BIOSSetBlinkAttr( void );
 extern void             BIOSSetNoBlinkAttr( void );
 // screen cursor functions
 extern int              BIOSGetCursor( char );
-extern void             BIOSSetCursor( char, char, char );
+extern void             BIOSSetCursor( int, int, int );
 extern void             BIOSNewCursor( char, char );
 // screen info functions
 extern char             BIOSGetRowCount( void );

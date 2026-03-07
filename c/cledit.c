@@ -123,16 +123,16 @@ vi_rc EditFile( char *name, int dammit )
     int         i, cnt, ocnt;
     int         j, len;
     window_id   wn;
-    char        cdir[FILENAME_MAX];
+    char        cdir[VI_MAX_PATH];
     info        *ci, *il;
     bool        usedir = FALSE;
-    char        mask[FILENAME_MAX];
+    char        mask[VI_MAX_PATH];
     bool        reset_dir;
     int         index;
     char        *altname = NULL;
     vi_rc       rc;
 
-    fn = MemAlloc( FILENAME_MAX );
+    fn = MemAlloc( VI_MAX_PATH );
 
     /*
      * get file name
@@ -282,7 +282,7 @@ vi_rc EditFile( char *name, int dammit )
                     /* directory has changed -- check with full path
                      * note that this will fail if an absolute path
                      * was specified thus we do the regular check first */
-                    char path[FILENAME_MAX];
+                    char path[VI_MAX_PATH];
                     char drive[_MAX_DRIVE];
                     char dir[_MAX_DIR];
                     char fname[_MAX_FNAME];

@@ -56,7 +56,7 @@ vi_rc Source( char *fn, char *data, int *ln )
     files       fi;
     sfile       *sf, *curr;
     char        tmp[MAX_SRC_LINE];
-    char        sname[FILENAME_MAX];
+    char        sname[VI_MAX_PATH];
     vi_rc       rc;
     bool        sicmp, wfb, ssa, exm;
     resident    *res;
@@ -393,7 +393,7 @@ static void finiSource( labels *lab, vlist *vl, sfile *sf, undo_stack *atomic )
  */
 void FileSPVAR( void )
 {
-    char        path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
     char        drive[_MAX_DRIVE], dir[_MAX_DIR], fname[_MAX_FNAME], ext[_MAX_EXT];
     int         i;
 
@@ -421,7 +421,7 @@ void FileSPVAR( void )
     if( CurrentFile != NULL ) {
         PushDirectory( path );
         ChangeDirectory( path );
-        GetCWD2( path, FILENAME_MAX );
+        GetCWD2( path, VI_MAX_PATH );
         PopDirectory();
     } else {
         path[0] = 0;
@@ -467,7 +467,7 @@ void SourceError( char *msg )
 static void finiSourceErrFile( char *fn )
 {
     char        drive[_MAX_DRIVE], directory[_MAX_DIR], name[_MAX_FNAME];
-    char        path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
     char        tmp[MAX_SRC_LINE];
 
     if( !EditFlags.CompileScript ) {
@@ -495,7 +495,7 @@ static vi_rc barfScript( char *fn, sfile *sf, vlist *vl, int *ln, char *vn )
     sfile       *curr;
     FILE        *foo;
     char        drive[_MAX_DRIVE], directory[_MAX_DIR], name[_MAX_FNAME];
-    char        path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
     char        tmp[MAX_SRC_LINE], *tmp2;
     int         i, k;
     vi_rc       rc;

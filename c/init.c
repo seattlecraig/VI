@@ -212,7 +212,7 @@ static void doInitializeEditor( int argc, char *argv[] )
 {
     int         i, arg, cnt, ocnt, ln, startcnt = 0;
     int         k, j;
-    char        tmp[FILENAME_MAX], c[1];
+    char        tmp[VI_MAX_PATH], c[1];
     char        buff[MAX_STR], file[MAX_STR], **list;
     char        cmd[MAX_STR * 2];
     char        *parm;
@@ -232,7 +232,7 @@ static void doInitializeEditor( int argc, char *argv[] )
      */
     if( getenv( "EDPATH" ) == NULL ) {
         char *watcom;
-        char edpath[FILENAME_MAX];
+        char edpath[VI_MAX_PATH];
 
         watcom = getenv( "WATCOM" );
         if( watcom != NULL ) {
@@ -420,7 +420,7 @@ static void doInitializeEditor( int argc, char *argv[] )
         {
             int     k2 = k;
             int     arg2 = arg;
-            char    path[_MAX_PATH];
+            char    path[VI_MAX_PATH];
             int     found = 0;
             int     fd;
 
@@ -428,9 +428,9 @@ static void doInitializeEditor( int argc, char *argv[] )
              * check for the existence of a file name containing spaces, and open it if
              * there is one
              */
-            memset( path, 0, _MAX_PATH );
+            memset( path, 0, VI_MAX_PATH );
             while( argv[k2] != NULL && strlen( path ) +
-                                       strlen( argv[k2] ) < _MAX_PATH ) {
+                                       strlen( argv[k2] ) < VI_MAX_PATH ) {
                 strcat( path, argv[k2] );
                 fd = open( path, O_RDONLY );
                 if( fd != -1 ) {

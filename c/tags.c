@@ -60,7 +60,7 @@ vi_rc GetCurrentTag( void )
  */
 vi_rc TagHunt( char *str )
 {
-    char        buff[MAX_STR], file[FILENAME_MAX];
+    char        buff[MAX_STR], file[VI_MAX_PATH];
     int         num;
     vi_rc       rc;
 
@@ -233,11 +233,11 @@ static vi_rc selectTag( FILE *f, char *str, char *buff, char *fname )
  */
 FILE *SearchForTags( void )
 {
-    char    path[FILENAME_MAX];
+    char    path[VI_MAX_PATH];
     char    *eop;
 
     if( CurrentFile && CurrentFile->name ) {
-        _fullpath(path, CurrentFile->name, FILENAME_MAX);
+        _fullpath(path, CurrentFile->name, VI_MAX_PATH);
 
         /*
          * Remove trailing filename.
@@ -247,7 +247,7 @@ FILE *SearchForTags( void )
             *eop = 0x00;
         }
     } else {
-        GetCWD2( path, FILENAME_MAX );
+        GetCWD2( path, VI_MAX_PATH );
     }
 
     eop = &path[strlen( path ) - 1];

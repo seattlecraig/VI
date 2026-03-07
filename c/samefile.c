@@ -43,14 +43,14 @@
  */
 bool SameFile( char *f1, char *f2 )
 {
-    char        full1[FILENAME_MAX];
-    char        full2[FILENAME_MAX];
+    char        full1[VI_MAX_PATH];
+    char        full2[VI_MAX_PATH];
 
     if( !file_cmp( f1, f2 ) ) {
         return( TRUE );
     }
-    _fullpath( full1, f1, FILENAME_MAX );
-    _fullpath( full2, f2, FILENAME_MAX );
+    _fullpath( full1, f1, VI_MAX_PATH );
+    _fullpath( full2, f2, VI_MAX_PATH );
     if( !file_cmp( full1, full2 ) ) {
         if( EditFlags.SameFileCheck ) {
             return( TRUE );

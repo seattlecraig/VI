@@ -194,7 +194,7 @@ static int closeAFile( void )
  */
 FILE *GetFromEnvAndOpen( char *path )
 {
-    char        tmppath[FILENAME_MAX];
+    char        tmppath[VI_MAX_PATH];
 
     GetFromEnv( path, tmppath );
     if( tmppath[0] != 0 ) {
@@ -248,7 +248,7 @@ void VerifyTmpDir( void )
     env_tmpdir = getenv( "tmp" );
     if( env_tmpdir != NULL ) {
         if( env_tmpdir[strlen( env_tmpdir ) - 1] == '\\' ) {
-            char buf[FILENAME_MAX];
+            char buf[VI_MAX_PATH];
             strcpy( buf, env_tmpdir );
             buf[strlen( buf ) - 1] = '\0';
             AddString2( &TmpDir, buf );
@@ -286,7 +286,7 @@ void MakeTmpPath( char *out, char *in )
  */
 vi_rc TmpFileOpen( char *inname, int *_handle )
 {
-    char        file[FILENAME_MAX];
+    char        file[VI_MAX_PATH];
 
     tmpnam( inname );
     MakeTmpPath( file, inname );
@@ -300,7 +300,7 @@ vi_rc TmpFileOpen( char *inname, int *_handle )
  */
 void TmpFileClose( int handle, char *name )
 {
-    char        file[FILENAME_MAX];
+    char        file[VI_MAX_PATH];
 
     if( handle < 0 ) {
         return;

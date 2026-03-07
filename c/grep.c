@@ -564,8 +564,8 @@ static vi_rc doGREP( char *dirlist )
  */
 static void fileGrep( char *dir, char **list, int *clist, window_id wn )
 {
-    char        fn[FILENAME_MAX], data[FILENAME_MAX], ts[FILENAME_MAX];
-    char        path[FILENAME_MAX];
+    char        fn[VI_MAX_PATH], data[VI_MAX_PATH], ts[VI_MAX_PATH];
+    char        path[VI_MAX_PATH];
     char        drive[_MAX_DRIVE], directory[_MAX_DIR], name[_MAX_FNAME];
     char        ext[_MAX_EXT];
     int         i;

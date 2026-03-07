@@ -114,7 +114,7 @@ void GetCurrentFilePath( char *path )
  */
 static void getTmpName( char *path, char *tmpname )
 {
-    char        tmp[FILENAME_MAX];
+    char        tmp[VI_MAX_PATH];
     int         i;
 
     while( 1 ) {
@@ -140,9 +140,9 @@ static void getTmpName( char *path, char *tmpname )
  */
 void DoAutoSave( void )
 {
-    char        path[FILENAME_MAX];
-    char        path2[FILENAME_MAX];
-    char        tmp[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
+    char        path2[VI_MAX_PATH];
+    char        tmp[VI_MAX_PATH];
     bool        quiet;
     FILE        *f;
     vi_rc       rc;
@@ -224,7 +224,7 @@ static bool handleKey( vi_key key )
  */
 bool LostFileCheck( void )
 {
-    char        path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
     vi_key      key;
     char        ch;
     int         off;
@@ -290,10 +290,10 @@ bool LostFileCheck( void )
  */
 void AutoSaveInit( void )
 {
-    char        path[FILENAME_MAX];
-    char        path2[FILENAME_MAX];
-    char        as_path[FILENAME_MAX];
-    char        asl_path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
+    char        path2[VI_MAX_PATH];
+    char        as_path[VI_MAX_PATH];
+    char        asl_path[VI_MAX_PATH];
     int         len;
     int         cnt;
     FILE        *f;
@@ -353,7 +353,7 @@ void AutoSaveInit( void )
             }
             f = fdopen( handle, "r" );
             if( f != NULL ) {
-                while( fgets( path2, FILENAME_MAX, f ) != NULL ) {
+                while( fgets( path2, VI_MAX_PATH, f ) != NULL ) {
                     for( i = strlen( path2 ); i && isWSorCtrlZ( path2[i - 1] ); --i ) {
                         path2[i - 1] = '\0';
                     }
@@ -414,7 +414,7 @@ void AutoSaveInit( void )
  */
 void AutoSaveFini( void )
 {
-    char        path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
     info        *cinfo;
 
     if( !AutoSaveInterval ) {
@@ -451,11 +451,11 @@ void SetNextAutoSaveTime( void )
 void RemoveFromAutoSaveList( void )
 {
     FILE        *f, *f2;
-    char        as_path[FILENAME_MAX];
-    char        as2_path[FILENAME_MAX];
-    char        path[FILENAME_MAX];
-    char        path2[FILENAME_MAX];
-    char        data[FILENAME_MAX];
+    char        as_path[VI_MAX_PATH];
+    char        as2_path[VI_MAX_PATH];
+    char        path[VI_MAX_PATH];
+    char        path2[VI_MAX_PATH];
+    char        data[VI_MAX_PATH];
     bool        found;
     int         i;
 
@@ -484,7 +484,7 @@ void RemoveFromAutoSaveList( void )
         fclose( f );
         return;
     }
-    while( fgets( path2, FILENAME_MAX, f ) != NULL ) {
+    while( fgets( path2, VI_MAX_PATH, f ) != NULL ) {
         for( i = strlen( path2 ); i && isWSorCtrlZ( path2[i - 1] ); --i ) {
             path2[i - 1] = '\0';
         }
@@ -495,7 +495,7 @@ void RemoveFromAutoSaveList( void )
             if( !strcmp( data, path2 ) ) {
                 found = TRUE;
                 remove( path2 );
-                while( fgets( data, FILENAME_MAX, f ) != NULL ) {
+                while( fgets( data, VI_MAX_PATH, f ) != NULL ) {
                     for( i = strlen( data ); i && isWSorCtrlZ( data[i - 1] ); --i ) {
                         data[i - 1] = '\0';
                     }

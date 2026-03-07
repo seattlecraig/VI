@@ -41,9 +41,9 @@
  */
 void GetCWD1( char **str )
 {
-    char        bob[FILENAME_MAX];
+    char        bob[VI_MAX_PATH];
 
-    GetCWD2( bob, FILENAME_MAX );
+    GetCWD2( bob, VI_MAX_PATH );
     AddString( str, bob );
 
 } /* GetCWD1 */

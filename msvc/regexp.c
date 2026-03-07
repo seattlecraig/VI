@@ -104,6 +104,13 @@ static char *regbol;        /* Beginning of input for ^ matching */
 static char **regstartp;    /* Pointer to startp array */
 static char **regendp;      /* Pointer to endp array */
 
+/*
+ * Case override for @ and ~ prefix characters.
+ * 0 = use global CASEIGNORE, 1 = force case-sensitive, 2 = force case-insensitive.
+ * Set by RegExec from the compiled regexp's caseover field.
+ */
+static int reg_caseover;
+
 /* Error codes matching VI's error system */
 /* ERR_NO_ERR should be 0, ERR_INVALID_REGEXP should be some error code */
 /* We just set RegExpError to 0 for OK or non-zero for error */
@@ -114,14 +121,28 @@ static char **regendp;      /* Pointer to endp array */
 #define FAIL(m) { RegExpError = 1; return(NULL); }
 #define EMSG(m) { RegExpError = 1; }
 
+/*
+ * regcaseignore - check if case-insensitive matching is active.
+ * Respects per-pattern @ (force sensitive) and ~ (force insensitive)
+ * overrides before falling back to the global CASEIGNORE flag.
+ */
+static int regcaseignore( void )
+{
+    if( reg_caseover == 1 ) return( 0 );  /* @ = force case-sensitive */
+    if( reg_caseover == 2 ) return( 1 );  /* ~ = force case-insensitive */
+#ifdef CASEIGNORE
+    return( CASEIGNORE );
+#else
+    return( 0 );
+#endif
+}
+
 /* Case comparison helpers */
 static int regcmp( int c1, int c2 )
 {
-#ifdef CASEIGNORE
-    if( CASEIGNORE ) {
+    if( regcaseignore() ) {
         return( tolower( c1 ) == tolower( c2 ) );
     }
-#endif
     return( c1 == c2 );
 }
 
@@ -155,12 +176,31 @@ regexp *RegComp( char *exp )
     char    *longest;
     int     len;
     int     flags;
+    int     caseover = 0;
 
     RegExpError = ERR_NO_ERR;
 
     if( exp == NULL ) {
         FAIL( "NULL argument" );
     }
+
+    /*
+     * Check for @ (force case-sensitive) or ~ (force case-insensitive)
+     * prefix characters. These override the global CASEIGNORE setting
+     * for this particular pattern. Used by fgrep when opening matched
+     * files to preserve the case-sensitivity of the original search.
+     */
+    if( exp[0] == '@' ) {
+        caseover = 1;   /* force case-sensitive */
+        exp++;
+    } else if( exp[0] == '~' ) {
+        caseover = 2;   /* force case-insensitive */
+        exp++;
+    }
+
+    /* Set the case override so regcaseignore() returns the right
+     * value during compilation (affects character class expansion). */
+    reg_caseover = caseover;
 
     /* First pass: determine size */
     regparse = exp;
@@ -201,6 +241,7 @@ regexp *RegComp( char *exp )
     r->reganch = 0;
     r->regmust = NULL;
     r->regmlen = 0;
+    r->caseover = caseover;
 
     /* Dig out information for optimizations */
     scan = r->program + 1;     /* First BRANCH */
@@ -461,27 +502,22 @@ static char *regatom( int *flagp )
                         }
                         for( ; klass <= klassend; klass++ ) {
                             regc( (char)klass );
-#ifdef CASEIGNORE
-                            if( CASEIGNORE ) {
+                            if( regcaseignore() ) {
                                 if( isupper( klass ) ) {
                                     regc( (char)tolower( klass ) );
                                 } else if( islower( klass ) ) {
                                     regc( (char)toupper( klass ) );
                                 }
                             }
-#endif
                         }
                         regparse++;
                     }
                 } else {
-#ifdef CASEIGNORE
-                    if( CASEIGNORE ) {
+                    if( regcaseignore() ) {
                         regc( (char)tolower( *regparse ) );
                         regc( (char)toupper( *regparse ) );
                         regparse++;
-                    } else
-#endif
-                    {
+                    } else {
                         regc( *regparse++ );
                     }
                 }
@@ -568,12 +604,9 @@ static char *regatom( int *flagp )
             break;
         default:
             ret = regnode( EXACTLY );
-#ifdef CASEIGNORE
-            if( CASEIGNORE ) {
+            if( regcaseignore() ) {
                 regc( (char)tolower( *regparse ) );
-            } else
-#endif
-            {
+            } else {
                 regc( *regparse );
             }
             regc( '\0' );
@@ -611,12 +644,9 @@ static char *regatom( int *flagp )
                     /* Escaped non-magic char */
                     regparse++;
                 }
-#ifdef CASEIGNORE
-                if( CASEIGNORE ) {
+                if( regcaseignore() ) {
                     regc( (char)tolower( *regparse ) );
-                } else
-#endif
-                {
+                } else {
                     regc( *regparse );
                 }
                 len++;
@@ -762,18 +792,18 @@ int RegExec( regexp *prog, char *string, int bol )
         return( 0 );
     }
 
-    /* If there is a "must appear" string, look for it */
-    if( prog->regmust != NULL ) {
+    /* Set per-pattern case override from @ or ~ prefix (stored at compile time) */
+    reg_caseover = prog->caseover;
+
+    /* If there is a "must appear" string, look for it.
+     * When case-insensitive, skip this optimization because strchr
+     * is case-sensitive and would miss matches where the first
+     * character differs in case (e.g., searching for "dir" won't
+     * find "Dir" because strchr looks for lowercase 'd' only). */
+    if( prog->regmust != NULL && !regcaseignore() ) {
         s = string;
         while( (s = strchr( s, prog->regmust[0] )) != NULL ) {
-#ifdef CASEIGNORE
-            if( CASEIGNORE ) {
-                if( _strnicmp( s, prog->regmust, prog->regmlen ) == 0 ) break;
-            } else
-#endif
-            {
-                if( strncmp( s, prog->regmust, prog->regmlen ) == 0 ) break;
-            }
+            if( strncmp( s, prog->regmust, prog->regmlen ) == 0 ) break;
             s++;
         }
         if( s == NULL ) return( 0 );
@@ -792,14 +822,11 @@ int RegExec( regexp *prog, char *string, int bol )
     if( prog->regstart != '\0' ) {
         /* We know what char it must start with */
         while( s != NULL ) {
-#ifdef CASEIGNORE
-            if( CASEIGNORE ) {
+            if( regcaseignore() ) {
                 while( *s != '\0' && tolower( *s ) != tolower( prog->regstart ) ) {
                     s++;
                 }
-            } else
-#endif
-            {
+            } else {
                 while( *s != '\0' && *s != prog->regstart ) {
                     s++;
                 }
@@ -877,12 +904,9 @@ static int regmatch( char *prog )
             char    *opnd = OPERAND( scan );
             int     len = (int)strlen( opnd );
 
-#ifdef CASEIGNORE
-            if( CASEIGNORE ) {
+            if( regcaseignore() ) {
                 if( _strnicmp( reginput, opnd, len ) != 0 ) return( 0 );
-            } else
-#endif
-            {
+            } else {
                 if( strncmp( reginput, opnd, len ) != 0 ) return( 0 );
             }
             reginput += len;
@@ -890,28 +914,22 @@ static int regmatch( char *prog )
         }
         case ANYOF:
             if( *reginput == '\0' ) return( 0 );
-#ifdef CASEIGNORE
-            if( CASEIGNORE ) {
+            if( regcaseignore() ) {
                 if( strchr( OPERAND( scan ), tolower( *reginput ) ) == NULL &&
                     strchr( OPERAND( scan ), toupper( *reginput ) ) == NULL )
                     return( 0 );
-            } else
-#endif
-            {
+            } else {
                 if( strchr( OPERAND( scan ), *reginput ) == NULL ) return( 0 );
             }
             reginput++;
             break;
         case ANYBUT:
             if( *reginput == '\0' ) return( 0 );
-#ifdef CASEIGNORE
-            if( CASEIGNORE ) {
+            if( regcaseignore() ) {
                 if( strchr( OPERAND( scan ), tolower( *reginput ) ) != NULL ||
                     strchr( OPERAND( scan ), toupper( *reginput ) ) != NULL )
                     return( 0 );
-            } else
-#endif
-            {
+            } else {
                 if( strchr( OPERAND( scan ), *reginput ) != NULL ) return( 0 );
             }
             reginput++;
@@ -1010,15 +1028,12 @@ static int regrepeat( char *p )
         scan += count;
         break;
     case EXACTLY:
-#ifdef CASEIGNORE
-        if( CASEIGNORE ) {
+        if( regcaseignore() ) {
             while( tolower( *scan ) == tolower( *opnd ) ) {
                 count++;
                 scan++;
             }
-        } else
-#endif
-        {
+        } else {
             while( *scan == *opnd ) {
                 count++;
                 scan++;
@@ -1026,17 +1041,14 @@ static int regrepeat( char *p )
         }
         break;
     case ANYOF:
-#ifdef CASEIGNORE
-        if( CASEIGNORE ) {
+        if( regcaseignore() ) {
             while( *scan != '\0' &&
                    (strchr( opnd, tolower( *scan ) ) != NULL ||
                     strchr( opnd, toupper( *scan ) ) != NULL) ) {
                 count++;
                 scan++;
             }
-        } else
-#endif
-        {
+        } else {
             while( *scan != '\0' && strchr( opnd, *scan ) != NULL ) {
                 count++;
                 scan++;
@@ -1044,17 +1056,14 @@ static int regrepeat( char *p )
         }
         break;
     case ANYBUT:
-#ifdef CASEIGNORE
-        if( CASEIGNORE ) {
+        if( regcaseignore() ) {
             while( *scan != '\0' &&
                    strchr( opnd, tolower( *scan ) ) == NULL &&
                    strchr( opnd, toupper( *scan ) ) == NULL ) {
                 count++;
                 scan++;
             }
-        } else
-#endif
-        {
+        } else {
             while( *scan != '\0' && strchr( opnd, *scan ) == NULL ) {
                 count++;
                 scan++;

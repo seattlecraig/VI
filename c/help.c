@@ -112,7 +112,7 @@ vi_rc DoHelp( char *data )
     char        *tstr;
     int         token;
     vi_rc       rc;
-    char        path[FILENAME_MAX];
+    char        path[VI_MAX_PATH];
     char        tmp[MAX_STR];
     int         i;
 

@@ -127,11 +127,11 @@ static int CompareEvents( const void *p1, const void *p2 )
 /*
  * BIOSGetCursor - set current cursor postion
  */
-void BIOSSetCursor( char page, char row, char col )
+void BIOSSetCursor( int page, int row, int col )
 {
     page = page;
-    _cpos.X = col;
-    _cpos.Y = row;
+    _cpos.X = (SHORT)col;
+    _cpos.Y = (SHORT)row;
     SetConsoleCursorPosition( OutputHandle, _cpos );
 
 } /* BIOSSetCursor */

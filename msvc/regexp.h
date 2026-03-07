@@ -25,6 +25,7 @@ typedef struct regexp {
     char    reganch;            /* Internal use: is the match anchored (^ at start)? */
     char    *regmust;           /* Internal use: string that match must include, or NULL */
     int     regmlen;            /* Internal use: length of regmust string */
+    int     caseover;           /* Case override: 0=use global, 1=force sensitive, 2=force insensitive */
     char    program[1];         /* Internal use: compiled program (variable length) */
 } regexp;
 
