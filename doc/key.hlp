@@ -189,8 +189,9 @@ Text Movement 1
 Text Manipulation
 -----------------
 The following commands manipulate text using the commands in
-Text Movement 1 (TM1), using search commands ?,/,n,N, or
-using an 'r' (uses selected region)
+Text Movement 1 (TM1), using search commands ?,/,n,N,
+using an 'r' (uses selected region), or using text objects
+(see Text Objects below)
   
 *c? - change characters.  If ? is from TM1, then text is deleted from
       the current cursor position to movement position, and then
@@ -231,6 +232,52 @@ using an 'r' (uses selected region)
       ? can also be a ~, which causes toggling of current line.
       ~~ may be prefixed with a repeat count.  
       
+Text Objects
+------------
+Text objects select a region of text and can be used as the motion for
+any operator command (c, d, y, !, >, <, ~).  They always start with
+'i' (inner - selects just the object) or 'a' (around - selects the
+object plus surrounding whitespace or delimiters).
+
+ iw - inner word (word characters only)
+ aw - around word (word plus surrounding whitespace)
+ iW - inner WORD (space-delimited, like W motion)
+ aW - around WORD (WORD plus surrounding whitespace)
+ i" - inner double-quoted string (contents between "...")
+ a" - around double-quoted string (including the quotes)
+ i' - inner single-quoted string (contents between '...')
+ a' - around single-quoted string (including the quotes)
+ i` - inner back-quoted string (contents between `...`)
+ a` - around back-quoted string (including the quotes)
+ i( - inner parentheses (contents between (...), multi-line)
+ a( - around parentheses (including the parens, multi-line)
+ i) - same as i(
+ a) - same as a(
+ ib - same as i( (mnemonic: block)
+ ab - same as a(
+ i{ - inner braces (contents between {...}, multi-line)
+ a{ - around braces (including the braces, multi-line)
+ i} - same as i{
+ a} - same as a{
+ iB - same as i{ (mnemonic: Block)
+ aB - same as a{
+ i[ - inner brackets (contents between [...], multi-line)
+ a[ - around brackets (including the brackets, multi-line)
+ i] - same as i[
+ a] - same as a[
+ i< - inner angle brackets (contents between <...>, multi-line)
+ a< - around angle brackets (including the brackets, multi-line)
+ i> - same as i<
+ a> - same as a<
+ ip - inner paragraph (block of non-blank lines)
+ ap - around paragraph (non-blank lines plus trailing blank lines)
+
+Examples:
+  diw  - delete the word under the cursor
+  ci"  - change the contents inside double quotes
+  da{  - delete a brace-delimited block including the braces
+  yap  - yank the current paragraph plus trailing blank lines
+
 Text Movement 2
 ---------------
 *G  - go to line specified by the repeat count.  No repeat count sends
