@@ -133,6 +133,17 @@ static vi_rc doOperator( event *ev )
              */
             if( LastEvent == 'r' ) {
                 rc = GetSelectedRegion( &range );
+            } else if( LastEvent == 'i' || LastEvent == 'a' ) {
+                /*
+                 * Text objects: 'i' = inner, 'a' = around.
+                 * Read the next key to determine which object
+                 * (w, W, ", ', (, {, [, <, p, etc.)
+                 */
+                bool    txtobj_inner = ( LastEvent == 'i' );
+                vi_key  objchar;
+                nextEvent();    /* read the object character key */
+                objchar = LastEvent;
+                rc = dispatchTextObject( &range, txtobj_inner, objchar );
             } else if( LastEvent == '0' ) {
                 rc = MoveLineBegin( &range, 1 );
             } else if( LastEvent == VI_KEY( ESC ) ) {

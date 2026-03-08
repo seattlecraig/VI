@@ -290,6 +290,8 @@
     <ClCompile Include="..\c\cmdline.c" />
     <ClCompile Include="..\c\editdc.c" />
     <ClCompile Include="..\c\word.c" />
+    <ClCompile Include="..\c\txtobj.c" />
+    <ClCompile Include="..\c\gcmd.c" />
     <ClCompile Include="..\c\hide.c" />
     <ClCompile Include="..\c\editins.c" />
     <ClCompile Include="..\c\getautoi.c" />

@@ -278,6 +278,24 @@ Examples:
   da{  - delete a brace-delimited block including the braces
   yap  - yank the current paragraph plus trailing blank lines
 
+g-Prefix Commands
+-----------------
+ gg  - go to first line of file.  With a repeat count, go to that line
+       (like G but defaults to line 1 instead of last line).
+ gd  - go to local declaration of word under cursor.  Searches backward
+       for the start of the current function, then forward for the first
+       whole-word occurrence of the identifier.
+ gu? - lowercase operator.  If ? is from TM1 or a text object, text is
+       lowercased from the current cursor position to movement position.
+       guu lowercases the current line.
+ gU? - uppercase operator.  If ? is from TM1 or a text object, text is
+       uppercased from the current cursor position to movement position.
+       gUU uppercases the current line.
+ gJ  - join next line to current line without inserting a space.
+       Like J but does not add whitespace between the joined lines.
+ gv  - reselect the last selection region.
+ gf  - open the filename under the cursor for editing.
+
 Text Movement 2
 ---------------
 *G  - go to line specified by the repeat count.  No repeat count sends

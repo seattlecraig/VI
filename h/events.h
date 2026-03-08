@@ -144,7 +144,7 @@ vi_pick( VI_KEY( c ),            IMChar,              IMChar,               Chan
 vi_pick( VI_KEY( d ),            IMChar,              IMChar,               Delete,                  BITS(EVENT_OP,       1, 0, 0, 0, 0, 1), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( e ),            IMChar,              IMChar,               MoveForwardWordEnd,      BITS(EVENT_REL_MOVE, 0, 0, 0, 0, 0, 0), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( f ),            IMChar,              IMChar,               MoveUpToChar,            BITS(EVENT_REL_MOVE, 0, 0, 0, 0, 0, 0), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )
-vi_pick( VI_KEY( g ),            IMChar,              IMChar,               InsertLikeLast,          BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )
+vi_pick( VI_KEY( g ),            IMChar,              IMChar,               DoGPrefix,               BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( h ),            IMChar,              IMChar,               MoveLeft,                BITS(EVENT_REL_MOVE, 0, 0, 1, 0, 1, 0), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( i ),            IMChar,              IMChar,               InsertTextAtCursor,      BITS(EVENT_MISC,     0, 0, 0, 0, 0, 0), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )
 vi_pick( VI_KEY( j ),            IMChar,              IMChar,               MoveDown,                BITS(EVENT_REL_MOVE, 0, 0, 0, 0, 1, 0), BITS(EVENT_INS,      1, 0, 0, 0, 0, 0) )

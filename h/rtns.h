@@ -861,3 +861,15 @@ vi_rc   GimmeCurrentEntireWordDim( int *sc, int *ec, bool big );
 vi_rc   MarkStartOfNextWordForward( i_mark *, i_mark *, bool );
 vi_rc   MarkEndOfNextWordForward( i_mark *, i_mark *, bool );
 vi_rc   MarkStartOfNextWordBackward( i_mark *, i_mark *, bool );
+
+/* gcmd.c */
+vi_rc   DoGPrefix( void );
+vi_rc   DoLowercase( range * );
+vi_rc   DoUppercase( range * );
+
+/* txtobj.c */
+vi_rc   dispatchTextObject( range *, bool, vi_key );
+vi_rc   TextObj_Word( range *, bool, bool );
+vi_rc   TextObj_Quote( range *, bool, char );
+vi_rc   TextObj_Bracket( range *, bool, char, char );
+vi_rc   TextObj_Paragraph( range *, bool );
