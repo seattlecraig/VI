@@ -44,9 +44,8 @@ vi_rc DoGenericFilter( linenum s, linenum e, char *cmd )
     FILE        *f;
     vi_rc       rc;
     char        realcmd[MAX_STR];
-    char        filtin[PATH_MAX], filtout[PATH_MAX];
+    char        filtin[_MAX_PATH], filtout[_MAX_PATH];
     fcb_list    fcblist;
-    int         fdin, fdout;
 
     rc = ModificationTest();
     if( rc != ERR_NO_ERR ) {
@@ -54,21 +53,29 @@ vi_rc DoGenericFilter( linenum s, linenum e, char *cmd )
     }
 
     /*
-     * get temp files using mkstemp (tmpnam is unsafe)
+     * get temp file names
      */
-    strcpy( filtin, "/tmp/vi_in_XXXXXX" );
-    strcpy( filtout, "/tmp/vi_out_XXXXXX" );
-    fdin = mkstemp( filtin );
-    if( fdin < 0 ) {
-        return( ERR_FILE_OPEN );
+#ifdef __LINUX__
+    {
+        int fdin, fdout;
+        strcpy( filtin, "/tmp/vi_in_XXXXXX" );
+        strcpy( filtout, "/tmp/vi_out_XXXXXX" );
+        fdin = mkstemp( filtin );
+        if( fdin < 0 ) {
+            return( ERR_FILE_OPEN );
+        }
+        close( fdin );
+        fdout = mkstemp( filtout );
+        if( fdout < 0 ) {
+            remove( filtin );
+            return( ERR_FILE_OPEN );
+        }
+        close( fdout );
     }
-    close( fdin );
-    fdout = mkstemp( filtout );
-    if( fdout < 0 ) {
-        remove( filtin );
-        return( ERR_FILE_OPEN );
-    }
-    close( fdout );
+#else
+    tmpnam( filtin );
+    tmpnam( filtout );
+#endif
     f = fopen( filtin, "w" );
     if( f == NULL ) {
         return( ERR_FILE_OPEN );

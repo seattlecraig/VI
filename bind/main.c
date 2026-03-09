@@ -35,11 +35,27 @@
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
-#include <unistd.h>
+#ifdef __UNIX__
+  #include <unistd.h>
+#else
+  #include <io.h>
+  #include <direct.h>
+#endif
 #include <fcntl.h>
 #include <malloc.h>
 #include <sys/stat.h>
 #include "banner.h"
+
+/* MSVC doesn't have POSIX permission macros */
+#ifndef S_IRWXU
+  #define S_IRWXU  _S_IREAD | _S_IWRITE
+#endif
+#ifndef S_IRWXG
+  #define S_IRWXG  0
+#endif
+#ifndef S_IRWXO
+  #define S_IRWXO  0
+#endif
 
 char    magic_cookie[] = "CGEXXX";
 

@@ -32,6 +32,9 @@
 
 #include "vi.h"
 #include "source.h"
+#include <windows.h>
+
+static char exePathBuf[MAX_PATH];
 
 int main( int argc, char *argv[] )
 {
@@ -40,7 +43,14 @@ int main( int argc, char *argv[] )
 #endif
 
     (void)argc;
-    EXEName = argv[0];
+    /* Get the full path to our own executable so CheckForBoundData
+     * can open it to read appended data.  argv[0] is unreliable —
+     * it may be just "vi" with no path. */
+    if( GetModuleFileNameA( NULL, exePathBuf, MAX_PATH ) > 0 ) {
+        EXEName = exePathBuf;
+    } else {
+        EXEName = argv[0];
+    }
     EditFlags.HasSystemMouse = TRUE;
     VarAddGlobalStr( "OS", "nt" );
     Comspec = getenv( "ComSpec" );

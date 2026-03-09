@@ -17,7 +17,7 @@ int main( int argc, char *argv[] )
     _argc = argc;
     _argv = argv;
     EXEName = _cmdname( buffer );
-    VarAddGlobalStr( "OS", "linux" );
+    VarAddGlobalStr( "OS", "unix" );
     Comspec = getenv( "SHELL" );
     if( Comspec == NULL ) {
         Comspec = "/bin/sh";

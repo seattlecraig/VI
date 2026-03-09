@@ -430,4 +430,15 @@
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
+  <!-- Post-build: bind data files into vi.exe using edbind -->
+  <PropertyGroup>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+    <PostBuildEvent>
+      <Command>set EDPATH=$(ProjectDir)..\dat
+"$(OutDir)edbind.exe" -q "$(OutDir)vi.exe"</Command>
+      <Message>Binding data files into vi.exe...</Message>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
 </Project>

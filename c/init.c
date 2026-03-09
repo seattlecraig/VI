@@ -241,7 +241,11 @@ static void doInitializeEditor( int argc, char *argv[] )
             strcpy( edpath, watcom );
             strcat( edpath, defaultEDPath );
         } else {
+#ifdef __LINUX__
+            strcpy( edpath, "/usr/local/share/vi/eddat" );
+#else
             strcpy( edpath, "C:\\tools_nt\\eddat" );
+#endif
         }
         if( setenv( "EDPATH", edpath, 0 ) != 0 ) {
             /*

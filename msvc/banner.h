@@ -22,4 +22,14 @@
 /* banner1p2 used by windowed version only, stub it anyway */
 #define banner1p2( ver ) "Version " ver
 
+/* banner1w( product, version ) - one-line product banner used by edbind */
+#define banner1w( product, ver ) product " Version " ver
+
+/* banner3 / banner3a - additional banner lines used by edbind */
+#define banner3     "All rights reserved."
+#define banner3a    ""
+
+/* edbind version */
+#define _EDBIND_VERSION_  "3.0.0"
+
 #endif
