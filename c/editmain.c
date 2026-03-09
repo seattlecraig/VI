@@ -239,7 +239,7 @@ static void ensureCursorDisplayed( void )
 vi_rc DoLastEvent( void )
 {
     event       *event;
-    vi_rc       rc;
+    vi_rc       rc = ERR_NO_ERR;
     bool        keep_sel;
 
     if( LastEvent >= MAX_EVENTS ) {
@@ -295,6 +295,8 @@ vi_rc DoLastEvent( void )
             case EVENT_MISC:
                 DoneCurrentInsert( TRUE );
                 rc = event->rtn.old();
+                break;
+            default:
                 break;
             }
             return( rc );
@@ -356,7 +358,7 @@ void DoneLastEvent( vi_rc rc, bool is_dotmode )
 void EditMain( void )
 {
     vi_rc       rc;
-    char        *msg;
+    char        *msg = NULL;
     bool        doclear;
 
     /*

@@ -208,6 +208,8 @@ vi_rc SrcWrite( sfile *curr, files *fi, char *data, vlist *vl )
     case SRCFILE_FILE:
         MyFprintf( fi->u.f[i], "%s\n", v1 );
         break;
+    default:
+        break;
     }
     return( ERR_NO_ERR );
 

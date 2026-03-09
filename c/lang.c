@@ -59,7 +59,7 @@ static int hashpjw( char *s, int entries )
     
     while( *s != '\0' ) {
         h = (h << 4) + toupper( *s );
-        if( g = h & 0xf0000000 ) {
+        if( (g = h & 0xf0000000) ) {
             h = h ^ (g >> 24);
             h = h ^ g;
         }

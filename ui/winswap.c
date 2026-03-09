@@ -139,9 +139,9 @@ static void fetchWindow( wind *w )
 
     pos = (long)w->id * buffSize();
     FileSeek( swapHandle, pos );
-    read( swapHandle, w->overlap, size );
-    read( swapHandle, w->whooverlapping, size );
-    read( swapHandle, w->text, sizeof( char_info ) * size );
+    if( read( swapHandle, w->overlap, size ) < 0 ) { /* */ }
+    if( read( swapHandle, w->whooverlapping, size ) < 0 ) { /* */ }
+    if( read( swapHandle, w->text, sizeof( char_info ) * size ) < 0 ) { /* */ }
     w->isswapped = FALSE;
 
 } /* fetchWindow */

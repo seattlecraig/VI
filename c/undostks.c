@@ -90,6 +90,8 @@ undo *UndoAlloc( undo_stack *stack, int type )
         break;
     case END_UNDO_GROUP:
         break;
+    default:
+        break;
     }
 
     while( 1 ) {

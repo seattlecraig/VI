@@ -55,7 +55,7 @@ vi_rc DoMatching( range *r, long count )
 vi_rc FindMatch( i_mark *pos1 )
 {
     char        *match[2];
-    int         matchcnt, which, m1, m2, i;
+    int         matchcnt, which = 0, m1, m2, i;
     char        matchd[MAX_STR], tmp[MAX_STR];
     char        *linedata;
     i_mark      pos2;

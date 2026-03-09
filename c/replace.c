@@ -43,7 +43,7 @@ vi_rc ReplaceChar( void )
     vi_rc       rc;
     vi_key      key;
 
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
     UpdateCurrentStatus( CSTATUS_REPLACECHAR );

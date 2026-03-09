@@ -43,6 +43,7 @@ static void drawTmpBorder( int color, int x1, int y1, int x2, int y2 )
 {
     int                 i, tl, bl, tr, br, height, width, k;
     char_info           what;
+    memset( &what, 0, sizeof( what ) );
     char_info           _FAR *scr;
 
     height = y2 - y1 + 1;
@@ -151,7 +152,7 @@ static void dickWithAWindow( int wn, bool topcorner, bool move, int *doresize,
     vi_key      key;
     bool        done = FALSE;
     int         x1, x2, y1, y2, nx1, nx2, ny1, ny2;
-    int         mrow, mcol;
+    int         mrow = 0, mcol = 0;
     int         dx, dy, bclr;
     wind        *cwd;
 
@@ -232,6 +233,7 @@ static void dickWithAWindow( int wn, bool topcorner, bool move, int *doresize,
                         dx = +1;
                         topcorner = TRUE;
                         break;
+                    default: break;
                     }
                 } else {
                     if( key == VI_KEY( MOUSEEVENT ) ) {

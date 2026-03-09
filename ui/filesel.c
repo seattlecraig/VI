@@ -200,6 +200,7 @@ static vi_rc displayGenericLines( file *f, linenum pagetop, int leftcol,
             if( isMenu ) {
                 if( InvokeMenuHook( CurrentMenuNumber, cl ) == -1 ) {
                     disabled = TRUE;
+                    (void)disabled; /* suppress unused variable warning */
                     if( cl == hilite ) {
                         info = &activegreyedmenu_info;
                     } else {
@@ -207,6 +208,7 @@ static vi_rc displayGenericLines( file *f, linenum pagetop, int leftcol,
                     }
                 } else {
                     disabled = FALSE;
+                    (void)disabled; /* suppress unused variable warning */
                     if( cl == hilite ) {
                         info = &activemenu_info;
                     } else {
@@ -608,7 +610,7 @@ vi_rc SelectLineInFile( selflinedata *sfd )
                     adjustCLN( &cln, &pagetop, -1, endline, text_lines );
                     drawbord = TRUE;
                     break;
-
+                default: break;
                 }
                 break;
             }
@@ -655,6 +657,7 @@ vi_rc SelectLineInFile( selflinedata *sfd )
                     cln = mouseLine + pagetop;
                 }
                 break;
+            default: break;
             }
             break;
 

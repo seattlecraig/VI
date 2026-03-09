@@ -417,6 +417,8 @@ bool FilePromptForSaveChanges( file *f )
                 Modified( FALSE );
             }
             break;
+        default:
+            break;
         }
     }
 #endif

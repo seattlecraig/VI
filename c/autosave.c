@@ -387,6 +387,7 @@ void AutoSaveInit( void )
     }
 
     old_len = strlen( lockFileName );
+    (void)old_len; /* suppress unused variable warning */
     MakeTmpPath( path, lockFileName );
     len = strlen( path ) - strlen( lockFileName );
     off = len + CHAR_OFF;
@@ -494,6 +495,7 @@ void RemoveFromAutoSaveList( void )
             MakeTmpPath( path2, CurrentFile->as_name );
             if( !strcmp( data, path2 ) ) {
                 found = TRUE;
+                (void)found; /* suppress unused variable warning */
                 remove( path2 );
                 while( fgets( data, VI_MAX_PATH, f ) != NULL ) {
                     for( i = strlen( data ); i && isWSorCtrlZ( data[i - 1] ); --i ) {

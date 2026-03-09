@@ -65,6 +65,8 @@ void HeapMsg( int msg )
     case _HEAPEND:
         Message2("_HEAPEND");
         break;
+    default:
+        break;
     }
 } /* HeapMsg */
 #endif
@@ -348,6 +350,8 @@ vi_rc WalkUndo( void )
             WPrintfLine( fw, ln++, "UNDO_DELETE_FCBS: start=%l lines=%l fcbs=%d",
                 cundo->data.fcbs.head->start_line, lcnt, fcbcnt );
             break;
+        default:
+            break;
         }
         cundo = cundo->next;
         if( cundo == NULL || ln == 20 ) {
@@ -484,6 +488,7 @@ vi_rc DumpMemory( void )
 
     wi = &filecw_info;
     rc = NewWindow2( &wn, wi );
+    (void)rc; /* suppress unused variable warning */
 
 #ifdef __NT__
     /* Get system memory info */

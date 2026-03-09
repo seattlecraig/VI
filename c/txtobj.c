@@ -244,7 +244,7 @@ found:
  * findMatchingBracket - scan for the matching bracket, handling nesting.
  *
  * Searches forward from 'startcol' on 'startline' for 'close' while
- * tracking nested 'open' characters. Returns the position in *eline/*ecol.
+ * tracking nested 'open' characters. Returns the position in *eline / *ecol.
  * Also searches backward if the cursor is on the close bracket.
  *
  * Columns are 0-based indices into line data.

@@ -218,6 +218,8 @@ void UpdateStatusWindow( void )
                 format = FMT_LEFT;
                 break;
 #endif
+            default:
+                break;
             }
             if( use_num ) {
                 ltoa( num, numstr, 10 );

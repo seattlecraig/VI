@@ -170,6 +170,7 @@ static void getFloat( ss_block *ss_new, char *start, int skip, int command )
             ss_new->type = SE_INVALIDTEXT;
             text++;
         }
+    default: break;
     }
     ss_new->len = text - start;
 }
@@ -447,6 +448,7 @@ void InitFORTRANFlags( linenum line_no )
         }
         text = line->inf.ld.nolinedata ? WorkLine->data : line->data;
         start = text;
+        (void)start; /* suppress unused variable warning */
         if( iscomment( *text ) ) {
             continue;
         }
@@ -526,6 +528,7 @@ void GetFORTRANBlock( ss_block *ss_new, char *start, int text_col )
             getSymbol( ss_new, length );
             return;
         }
+    default: break;
     }
 
     if( issymbol( start[0] ) ) {

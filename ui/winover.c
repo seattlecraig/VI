@@ -105,7 +105,7 @@ void RestoreOverlap( window_id wn, bool scrflag )
     wind                *w, *wo, *o;
     int                 i, j, k, l;
     char                *whoover, *over, *img;
-    char_info           _FAR *scr;
+    char_info           _FAR *scr = NULL;
 #ifdef __VIO__
     unsigned            oscr;
 #endif

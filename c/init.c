@@ -188,6 +188,8 @@ static void checkFlags( int *argc, char *argv[], char *start[],
         case 'n':
             wantNoReadEntireFile = TRUE;
             break;
+        default:
+            break;
         }
     }
 

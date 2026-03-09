@@ -279,6 +279,7 @@ void GetMkBlock( ss_block *ss_new, char *start, int line )
     case '.':
         getDirective( ss_new, start );
         return;
+    default: break;
     }
 
     if( isalpha( start[0] ) ) {

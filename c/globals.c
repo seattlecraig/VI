@@ -56,7 +56,7 @@ int NumEditOpts = sizeof( EditOpts ) / sizeof( char _NEAR * );
 /* event data */
 #undef vi_pick
 #define vi_pick( enum, modeless, insert, command, nm_bits, bits ) \
-    modeless, insert, command, nm_bits, bits,
+    { { modeless }, insert, { command }, nm_bits, bits },
 event _NEAR EventList[] = {
 #include "events.h"
 #undef vi_pick

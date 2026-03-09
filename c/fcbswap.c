@@ -38,7 +38,7 @@
  */
 void FetchFcb( fcb *fb )
 {
-    vi_rc       rc;
+    vi_rc       rc = ERR_NO_ERR;
 
     if( fb == NULL ) {
         rc = ERR_INTERNAL_NULL_PTR;

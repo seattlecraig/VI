@@ -61,6 +61,7 @@ int WindowAuxInfo( window_id wn, int type )
     case WIND_INFO_BORDER_COLOR1: rc = w->border_color1; break;
     case WIND_INFO_BORDER_COLOR2: rc = w->border_color2; break;
     case WIND_INFO_HAS_SCROLL_GADGETS: rc = w->has_scroll_gadgets; break;
+    default: break;
     }
 
     return( rc );
@@ -86,6 +87,7 @@ void WindowAuxUpdate( window_id wn, int type, int data )
     case WIND_INFO_BORDER_COLOR1: w->border_color1 = data; break;
     case WIND_INFO_BORDER_COLOR2: w->border_color2 = data; break;
     case WIND_INFO_HAS_SCROLL_GADGETS: w->has_scroll_gadgets = data; break;
+    default: break;
     }
 
 } /* WindowAuxUpdate */

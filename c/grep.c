@@ -309,10 +309,14 @@ BOOL WINEXP GrepListProc( HWND dlg, UINT msg, UINT wparam, LONG lparam )
         case IDCANCEL:
             EndDialog( dlg, ERR_NO_ERR );
             return( TRUE );
+        default:
+            break;
         }
         break;
     case WM_DESTROY:
         finiList( fileCount, fileList );
+        break;
+    default:
         break;
     }
     return( FALSE );
@@ -375,6 +379,8 @@ BOOL WINEXP GrepListProc95( HWND dlg, UINT msg, WPARAM wparam, LPARAM lparam )
         case IDCANCEL:
             EndDialog( dlg, ERR_NO_ERR );
             return( TRUE );
+        default:
+            break;
         }
         break;
     case WM_NOTIFY:
@@ -384,6 +390,8 @@ BOOL WINEXP GrepListProc95( HWND dlg, UINT msg, WPARAM wparam, LPARAM lparam )
         break;
     case WM_DESTROY:
         finiList( fileCount, fileList );
+        break;
+    default:
         break;
     }
     return( FALSE );
@@ -796,7 +804,10 @@ static vi_rc fSearch( char *fn, char *r )
         }
         if( strloc != sString ) {
             // partial match -- keep the last bunch of text as context
+            /* ensure null termination since strncpy won't add one when
+             * the source is >= MAX_DISP characters */
             strncpy( context_display, buffloc - MAX_DISP, MAX_DISP );
+            context_display[MAX_DISP - 1] = '\0';
         }
     }
     close( handle );

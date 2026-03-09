@@ -264,6 +264,8 @@ vi_rc ProcessEx( linenum n1, linenum n2, bool n2f, int dmt, int tkn,
             rc = ERR_NO_ERR;
         }
         break;
+    default:
+        break;
     }
     return( rc );
 

@@ -187,6 +187,8 @@ copyloop2:
                     barfChar( *tmp++ );
                 }
                 break;
+            default:
+                break;
             }
         } else {
             barfChar( cin );

@@ -695,6 +695,8 @@ static long _NEAR cExpr12( void )
         strcpy( lastString, tokenBuff );
         nextToken();
         break;
+    default:
+        break;
     }
     return( value );
 }

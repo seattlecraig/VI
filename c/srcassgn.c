@@ -110,6 +110,8 @@ vi_rc SrcAssign( char *data, vlist *vl )
                 case 'l':
                     lnumflag = TRUE;
                     break;
+                default:
+                    break;
                 }
                 EliminateFirstN( data, 1 );
             }
@@ -180,6 +182,8 @@ vi_rc SrcAssign( char *data, vlist *vl )
                     j++;
                 }
                 itoa( j, v1, 10 );
+                break;
+            default:
                 break;
             }
         } else {

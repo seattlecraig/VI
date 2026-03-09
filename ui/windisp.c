@@ -62,11 +62,11 @@ vi_rc displayLineInWindowGeneric( window_id wn, int c_line_no,
 {
     wind                *w;
     char_info           *txt;
-    char                *over, *tmp, *otmp;
-    char_info           _FAR *scr;
+    char                *over, *tmp, *otmp = NULL;
+    char_info           _FAR *scr = NULL;
     int                 addr, start, end, a, spend;
     int                 cnt1, cnt2, startc, spl;
-    char_info           blank, what;
+    char_info           blank, what = { 0 };
 #ifdef __VIO__
     unsigned            oscr;
     unsigned            tbytes;
@@ -234,13 +234,17 @@ vi_rc DisplayLineInWindowWithColor( window_id wn, int c_line_no,
 {
     ss_block    ss;
 
-    SEType[SE_UNUSED].foreground = ts->foreground;
-    SEType[SE_UNUSED].background = ts->background;
-    SEType[SE_UNUSED].font = FONT_DEFAULT;
-    ss.type = SE_UNUSED;
+    /* SE_UNUSED is -1 which would index out of bounds; borrow SE_TEXT slot */
+    type_style  saved_style = SEType[SE_TEXT];
+    SEType[SE_TEXT].foreground = ts->foreground;
+    SEType[SE_TEXT].background = ts->background;
+    SEType[SE_TEXT].font = FONT_DEFAULT;
+    ss.type = SE_TEXT;
     ss.end = BEYOND_TEXT;
 
-    return( displayLineInWindowGeneric( wn, c_line_no, text, start_col, &ss ) );
+    vi_rc rc = displayLineInWindowGeneric( wn, c_line_no, text, start_col, &ss );
+    SEType[SE_TEXT] = saved_style;
+    return( rc );
 }
 
 /*
@@ -384,7 +388,7 @@ static void changeColorOfDisplayLine( int line, int scol, int ecol, type_style *
     char                *over;
     char_info           _FAR *scr;
     char_info           what;
-#ifdef __VIO__
+#if defined( __VIO__ ) || defined( __LINUX__ )
     unsigned            oscr;
     unsigned            onscr;
 #endif
@@ -438,7 +442,7 @@ static void changeColorOfDisplayLine( int line, int scol, int ecol, type_style *
     t = sscol + spl * w->width;
     scr = (char_info _FAR *) &Scrn[(w->x1 + sscol + (spl + w->y1) * WindMaxWidth) *
                                    sizeof( char_info )];
-#ifdef __VIO__
+#if defined( __VIO__ ) || defined( __LINUX__ )
     oscr = (unsigned) ((char _FAR *) scr - Scrn);
     onscr = 0;
 #endif
@@ -454,7 +458,7 @@ static void changeColorOfDisplayLine( int line, int scol, int ecol, type_style *
             if( *over++ == NO_CHAR ) {
                 what.ch = (*scr).ch;
                 WRITE_SCREEN( *scr, what );
-#ifdef __VIO__
+#if defined( __VIO__ ) || defined( __LINUX__ )
                 onscr++;
 #endif
             }
@@ -464,7 +468,7 @@ static void changeColorOfDisplayLine( int line, int scol, int ecol, type_style *
             if( *over++ == NO_CHAR ) {
                 what.ch = (*scr).ch;
                 WRITE_SCREEN( *scr, what );
-#ifdef __VIO__
+#if defined( __VIO__ ) || defined( __LINUX__ )
                 onscr++;
 #endif
             }
@@ -474,7 +478,7 @@ static void changeColorOfDisplayLine( int line, int scol, int ecol, type_style *
         while( cnt1-- != 0 ) {
             what.ch = (*scr).ch;
             WRITE_SCREEN( *scr, what );
-#ifdef __VIO__
+#if defined( __VIO__ ) || defined( __LINUX__ )
             onscr++;
 #endif
             scr++;
@@ -482,13 +486,13 @@ static void changeColorOfDisplayLine( int line, int scol, int ecol, type_style *
         while( cnt2-- != 0 ) {
             what.ch = (*scr).ch;
             WRITE_SCREEN( *scr, what );
-#ifdef __VIO__
+#if defined( __VIO__ ) || defined( __LINUX__ )
             onscr++;
 #endif
             scr++;
         }
     }
-#ifdef __VIO__
+#if defined( __VIO__ ) || defined( __LINUX__ )
     MyVioShowBuf( oscr, onscr );
 #endif
     ReleaseWindow( w );
@@ -611,11 +615,15 @@ vi_rc SetCharInWindowWithColor( window_id wn, int line, int col, char text,
 vi_rc DisplayLineInWindow( window_id wn, int c_line_no, char *text )
 {
     ss_block    ss;
-    SEType[SE_UNUSED].foreground = Windows[wn]->text_color;
-    SEType[SE_UNUSED].background = Windows[wn]->background_color;
-    SEType[SE_UNUSED].font = FONT_DEFAULT;
-    ss.type = SE_UNUSED;
+    /* SE_UNUSED is -1 which would index out of bounds; borrow SE_TEXT slot */
+    type_style  saved_style = SEType[SE_TEXT];
+    SEType[SE_TEXT].foreground = Windows[wn]->text_color;
+    SEType[SE_TEXT].background = Windows[wn]->background_color;
+    SEType[SE_TEXT].font = FONT_DEFAULT;
+    ss.type = SE_TEXT;
     ss.end = BEYOND_TEXT;
-    return( displayLineInWindowGeneric( wn, c_line_no, text, 0, &ss ) );
+    vi_rc rc = displayLineInWindowGeneric( wn, c_line_no, text, 0, &ss );
+    SEType[SE_TEXT] = saved_style;
+    return( rc );
 
 } /* DisplayLineInWindow */

@@ -227,7 +227,9 @@ void *doMemReAllocUnsafe( void *ptr, unsigned size, _trmem_who who )
     void        *tmp;
 
     unsigned    orig_size;
+#ifdef __WATCOMC__
     unsigned    tsize;
+#endif
 
     if( ptr != NULL ) {
 #ifdef __WATCOMC__

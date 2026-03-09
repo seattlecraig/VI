@@ -50,10 +50,10 @@ static vi_rc doCompressExpand( bool compress )
     /*
      * init
      */
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
-    if( rc = SaveAndResetFilePos( 1 ) ) {
+    if( (rc = SaveAndResetFilePos( 1 )) ) {
         return( rc );
     }
     tmp = StaticAlloc();

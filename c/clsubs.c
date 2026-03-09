@@ -202,7 +202,7 @@ vi_rc Substitute( linenum n1, linenum n2, char *data )
         return( ERR_NO_STACK );
     }
     strcpy( sstr, data );
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
     strcpy( data, sstr );
@@ -225,6 +225,8 @@ vi_rc Substitute( linenum n1, linenum n2, char *data )
         case 'i':
         case 'c':
             iflag = TRUE;
+            break;
+        default:
             break;
         }
     }

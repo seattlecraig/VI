@@ -359,6 +359,8 @@ void SSDifBlock( ss_block *ss_old, char *text, int start_col,
     case LANG_AWK:
         InitPerlLine( text );
         break;
+    default:
+        break;
     }
     ss_inc = ss_old;
     text_col = 0;
@@ -457,6 +459,8 @@ bool SSKillsFlags( char ch )
                 return( TRUE );
             }
             break;
+        default:
+            break;
         }
     }
     return( FALSE );
@@ -499,6 +503,8 @@ void SSInitLanguageFlags( linenum line_no )
         case LANG_AWK:
             InitPerlFlags( line_no );
             break;
+        default:
+            break;
         }
     }
 }
@@ -540,6 +546,8 @@ void SSInitLanguageFlagsGivenValues( ss_flags *flags )
         case LANG_AWK:
             InitPerlFlagsGivenValues( &flags->p );
             break;
+        default:
+            break;
         }
     }
 }
@@ -580,6 +588,8 @@ void SSGetLanguageFlags( ss_flags *flags )
         case LANG_PERL:
         case LANG_AWK:
             GetPerlFlags( &flags->p );
+            break;
+        default:
             break;
         }
     }

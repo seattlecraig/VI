@@ -119,6 +119,8 @@ static vi_key getOverrideKey( void )
                     RedrawMouse( MouseRow, MouseCol );
                     DisplayMouse( TRUE );
                     break;
+                default:
+                    break;
                 }
                 mcnt++;
             }
@@ -234,6 +236,8 @@ vi_key GetVIKey( vi_key ch, int scan, bool shift )
         } else {
             return( VI_KEY( DEL ) );
         }
+    default:
+        break;
     }
     if( scan >= 59 && scan <= 68 ) {
         return ( scan - 59 + VI_KEY( F1 ) );

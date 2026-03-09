@@ -222,6 +222,7 @@ void GetGMLBlock( ss_block *ss_new, char *start, int line )
     case '.':
         flags.inGMLKeyword = FALSE;
         break;
+    default: break;
     }
 
     if( isalnum( start[0] ) || ( start[0] == '_' ) ) {

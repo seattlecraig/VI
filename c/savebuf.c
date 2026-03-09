@@ -58,6 +58,8 @@ static void freeSavebuf( savebuf *tmp )
             FreeEntireFcb( cfcb );
         }
         break;
+    default:
+        break;
     }
 
 } /* freeSavebuf */
@@ -95,7 +97,7 @@ static vi_rc insertGenericSavebuf( int buf, int afterflag )
     int         maxCursor;
     vi_rc       rc;
 
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
 
@@ -185,6 +187,8 @@ static vi_rc insertGenericSavebuf( int buf, int afterflag )
             }
         }
         break;
+    default:
+        break;
     }
 #ifdef __WIN__
     if( tmp == &clip ) {
@@ -270,7 +274,7 @@ vi_rc GetSavebufString( char **data )
     fcb         *cfcb;
     line        *cline;
     vi_rc       rc;
-    long        len;
+    long        len = 0;
 
     /*
      * fetch the savebuf
@@ -313,6 +317,8 @@ vi_rc GetSavebufString( char **data )
             len += FcbSize( cfcb );
         }
         break;
+    default:
+        break;
     }
     rc = ERR_NO_ERR;
     if( len > MAX_STR * 4 ) {
@@ -332,6 +338,8 @@ vi_rc GetSavebufString( char **data )
                     strcat( *data, "\\n" );
                 }
             }
+            break;
+        default:
             break;
         }
     }
@@ -512,7 +520,7 @@ vi_rc SwitchSavebuf( void )
     int         buf, i;
     linenum     lcnt;
     savebuf     *tmp;
-    char        *data;
+    char        *data = NULL;
     fcb         *cfcb;
 
     /*
@@ -548,6 +556,8 @@ vi_rc SwitchSavebuf( void )
             lcnt += cfcb->end_line - cfcb->start_line + 1;
         }
         Message1( "Buffer %d active, %l lines:", buf + 1, lcnt );
+        break;
+    default:
         break;
     }
     Message2( "\"%s\"", data );

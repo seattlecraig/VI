@@ -224,6 +224,8 @@ static vi_rc doFileComplete( char *data, int start, int max, bool getnew,
     case VI_KEY( MOUSEEVENT ):
         lastFilec = mouseFilec;
         break;
+    default:
+        break;
     }
     while( lastFilec >= DirFileCount ) {
         lastFilec -= DirFileCount;

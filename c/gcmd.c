@@ -126,7 +126,6 @@ vi_rc DoUppercase( range *r )
  */
 static vi_rc doGOperator( op_rtn opfn, vi_key opchar )
 {
-    vi_key      next_key;
     event       *next;
     vi_rc       rc;
     long        count;

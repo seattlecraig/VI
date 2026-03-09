@@ -71,6 +71,8 @@ vi_rc ResizeWindow( window_id wn, int x1, int y1, int x2, int y2, int scrflag )
      */
     k = 1;
     bt = (int) w->has_border;
+    (void)k; /* suppress unused variable warning */
+    (void)bt; /* suppress unused variable warning */
     ClearWindow( wn );
     if( w->title != NULL ) {
         WindowTitle( wn, w->title );

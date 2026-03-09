@@ -594,6 +594,8 @@ static vi_rc barfScript( char *fn, sfile *sf, vlist *vl, int *ln, char *vn )
             }
             strcpy( &tmp[k], WorkLine->data );
             break;
+        default:
+            break;
         }
 
         /*

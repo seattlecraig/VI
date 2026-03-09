@@ -39,7 +39,7 @@
 void DrawBorder( window_id wn )
 {
     wind                *w;
-    int                 i, j, k, stc, etc, ctc;
+    int                 i, j, k, stc = 0, etc = 0, ctc;
     int                 tl, bl, tr, br;
     int                 xtl, xbl, xtr, xbr;
     char                *over, c;
@@ -47,7 +47,7 @@ void DrawBorder( window_id wn )
     char_info           what, what2;
     char_info           _FAR *scr;
     char_info           *txt;
-    int                 topscol, topecol, topccol;
+    int                 topscol = 0, topecol = 0, topccol;
     char                *wb;
 
     if( EditFlags.Quiet ) {

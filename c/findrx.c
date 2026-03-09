@@ -45,7 +45,7 @@ vi_rc FindRegularExpression( char *pat, i_mark *pos1, char **linedata,
 {
     vi_rc       rc;
     int         found;
-    linenum     ilineno;
+    linenum     ilineno = 0;
     bool        wrapped = FALSE;
     char        *data;
     line        *cline;
@@ -138,7 +138,7 @@ vi_rc FindRegularExpressionBackwards( char *pat, i_mark *pos1, char **linedata,
     char        *data;
     bool        wrapped = FALSE;
     bool        found;
-    linenum     ilineno;
+    linenum     ilineno = 0;
     line        *cline;
     fcb         *cfcb;
     regexp      rcpy;

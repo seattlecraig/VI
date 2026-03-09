@@ -78,6 +78,8 @@ vi_rc SrcExpr( sfile *sf, vlist *vl )
             case EXPR_TIMESEQ:
                 oval *= val;
                 break;
+            default:
+                break;
             }
             val = oval;
         }

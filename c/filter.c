@@ -44,8 +44,9 @@ vi_rc DoGenericFilter( linenum s, linenum e, char *cmd )
     FILE        *f;
     vi_rc       rc;
     char        realcmd[MAX_STR];
-    char        filtin[L_tmpnam], filtout[L_tmpnam];
+    char        filtin[PATH_MAX], filtout[PATH_MAX];
     fcb_list    fcblist;
+    int         fdin, fdout;
 
     rc = ModificationTest();
     if( rc != ERR_NO_ERR ) {
@@ -53,10 +54,21 @@ vi_rc DoGenericFilter( linenum s, linenum e, char *cmd )
     }
 
     /*
-     * get file
+     * get temp files using mkstemp (tmpnam is unsafe)
      */
-    tmpnam( filtin );
-    tmpnam( filtout );
+    strcpy( filtin, "/tmp/vi_in_XXXXXX" );
+    strcpy( filtout, "/tmp/vi_out_XXXXXX" );
+    fdin = mkstemp( filtin );
+    if( fdin < 0 ) {
+        return( ERR_FILE_OPEN );
+    }
+    close( fdin );
+    fdout = mkstemp( filtout );
+    if( fdout < 0 ) {
+        remove( filtin );
+        return( ERR_FILE_OPEN );
+    }
+    close( fdout );
     f = fopen( filtin, "w" );
     if( f == NULL ) {
         return( ERR_FILE_OPEN );

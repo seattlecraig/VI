@@ -493,7 +493,7 @@ typedef struct {
     window_id   eiw;            // alternate window to accept events in (like
                                 // the options window after fgrep...)
     bool        is_menu : 1;    // is a menu we are showing
-    bool        spare   : 7;
+    unsigned    spare   : 7;
 } selectitem;
 
 /*
@@ -518,7 +518,7 @@ typedef struct {
                                     // the options window after fgrep...)
     bool        is_menu             : 1; // select list is a menu
     bool        has_scroll_gadgets  : 1; // list has scroll gadgets
-    bool        spare               : 6;
+    unsigned    spare               : 6;
 } selflinedata;
 
 /*

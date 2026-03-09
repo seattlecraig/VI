@@ -103,6 +103,8 @@ void LoadHistory( char *cmd )
             case READ_LASTFILES:
                 updateHist( &LastFilesHist, str );
                 break;
+            default:
+                break;
             }
             cnt--;
         }

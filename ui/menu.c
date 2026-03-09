@@ -212,6 +212,7 @@ static menu *findMenu( char *str, menu ***predef_menu )
     int         num;
 
     len = strlen( str );
+    (void)len; /* suppress unused variable warning */
     *predef_menu = NULL;
     res = NULL;
     if( str[0] == 'f' || str[0] == 'w' ) {

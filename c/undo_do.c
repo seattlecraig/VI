@@ -61,6 +61,8 @@ static vi_rc validateUndo( undo *cundo )
         case END_UNDO_GROUP:
             depth++;
             break;
+        default:
+            break;
         }
         cundo = cundo->next;
         if( cundo == NULL ) {
@@ -83,8 +85,8 @@ static vi_rc realUndo( undo_stack *stack, undo_stack *us )
     undo                *cundo, *tundo;
     bool                done = FALSE;
     vi_rc               rc = ERR_NO_ERR;
-    int                 col, depth = 0;
-    linenum             lne, top;
+    int                 col = 0, depth = 0;
+    linenum             lne = 0, top = 0;
     char                *name;
     linedel_flags       ldf;
 
@@ -148,6 +150,8 @@ static vi_rc realUndo( undo_stack *stack, undo_stack *us )
         case UNDO_DELETE_FCBS:
             rc = InsertLines( cundo->data.fcbs.head->start_line,
                               &cundo->data.fcbs, us );
+            break;
+        default:
             break;
         }
         if( rc > ERR_NO_ERR ) {

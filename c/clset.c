@@ -285,6 +285,8 @@ static char *getOneSetVal( int token, bool isnonbool, char *tmpstr,
             case SET1_T_TOOLBARCOLOR:
                 j = ToolBarColor;
                 break;
+            default:
+                break;
             }
             itoa( j, tmpstr, 10 );
             str = tmpstr;
@@ -585,6 +587,8 @@ static vi_rc processSetToken( int j, char *value, int *winflag, bool isnonbool )
                     return( ERR_INVALID_SET_COMMAND );
                 }
                 StrMerge( 4, WorkLine->data, fn, SingleBlank, str, SingleBlank );
+                break;
+            default:
                 break;
             }
             return( ERR_NO_ERR );

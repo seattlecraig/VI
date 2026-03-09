@@ -62,7 +62,7 @@ vi_rc GenericJoinCurrentLineToNext( bool remsp )
 {
     line        *nline = CurrentLine;
     fcb         *nfcb = CurrentFcb;
-    int         i, j, k;
+    int         i, j, k = 0;
     vi_rc       rc;
 
     /*
@@ -140,7 +140,7 @@ vi_rc JoinCurrentLineToNext( void )
     int     i, j;
     vi_rc   rc;
 
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
     i = (int) GetRepeatCount();

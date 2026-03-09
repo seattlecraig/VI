@@ -600,7 +600,7 @@ vi_rc EnterHexKey( void )
     char        st[MAX_STR], val;
     vi_rc       rc;
 
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
     if( CurrentLine->len >= MaxLinem1 ) {

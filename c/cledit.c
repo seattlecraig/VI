@@ -476,6 +476,8 @@ vi_rc EditFileFromList( void )
                         repeat = TRUE;
                     }
                     break;
+                default:
+                    break;
                 }
             }
         }

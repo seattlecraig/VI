@@ -32,6 +32,7 @@
 #include "vi.h"
 #include "posix.h"
 #include <fcntl.h>
+#include <stdint.h>
 #ifdef __WATCOMC__
   #include <share.h>
   #define sopen3 sopen
@@ -47,7 +48,7 @@ static char magicCookie[] = "CGEXXX";
 
 #define MAGIC_COOKIE_SIZE sizeof( magicCookie )
 
-static long     *dataOffsets;
+static int32_t  *dataOffsets;
 static short    *entryCounts, dataFcnt;
 static char     *dataFnames;
 static long     dataStart;
@@ -58,8 +59,15 @@ static long     dataStart;
 void CheckForBoundData( void )
 {
     int         h, i;
-    char        buff[MAGIC_COOKIE_SIZE + 3], *tmp;
-    short       taillen;
+    /*
+     * Trailer layout (must match edbind):
+     *   magicCookie (MAGIC_COOKIE_SIZE bytes, null-terminated)
+     *   1 pad byte
+     *   int32_t length of bound data
+     */
+    #define TRAILER_SIZE  ((int)(MAGIC_COOKIE_SIZE + 1 + sizeof( int32_t )))
+    char        buff[TRAILER_SIZE], *tmp;
+    int32_t     taillen;
 
     /*
      * get trailer
@@ -68,8 +76,8 @@ void CheckForBoundData( void )
     if( h == -1 ) {
         return;
     }
-    lseek( h, -((long) MAGIC_COOKIE_SIZE + 3L), SEEK_END );
-    read( h, buff, 3 + MAGIC_COOKIE_SIZE );
+    lseek( h, -(long)TRAILER_SIZE, SEEK_END );
+    if( read( h, buff, TRAILER_SIZE ) < 0 ) { /* */ }
 
     /*
      * seek to start of data
@@ -78,22 +86,22 @@ void CheckForBoundData( void )
         close( h );
         return;
     }
-    taillen = *((short *) &(buff[MAGIC_COOKIE_SIZE + 1]));
-    dataStart = (long) -((long) taillen + (long) MAGIC_COOKIE_SIZE + 3);
+    taillen = *((int32_t *) &(buff[MAGIC_COOKIE_SIZE + 1]));
+    dataStart = (long) -((long) taillen + (long) TRAILER_SIZE);
     lseek( h, dataStart, SEEK_END );
 
     /*
      * get everything
      */
     BndMemory = MemAlloc( taillen + 4 );
-    read( h, BndMemory, taillen + 4 );
+    if( read( h, BndMemory, taillen + 4 ) < 0 ) { /* */ }
     close( h );
 
     /*
      * get number of files, and get space to store data
      */
     dataFcnt = *(short *) BndMemory;
-    dataOffsets = MemAlloc( dataFcnt * sizeof( long ) );
+    dataOffsets = MemAlloc( dataFcnt * sizeof( int32_t ) );
     entryCounts = MemAlloc( dataFcnt * sizeof( short ) );
 
     /*
@@ -109,7 +117,7 @@ void CheckForBoundData( void )
     /*
      * copy over file offset and linenumber data
      */
-    i = dataFcnt * sizeof( long );
+    i = dataFcnt * sizeof( int32_t );
     memcpy( dataOffsets, tmp, i );
     tmp += i;
     memcpy( entryCounts, tmp , dataFcnt * sizeof( short ) );
@@ -151,7 +159,7 @@ bool SpecialOpen( char *fn, GENERIC_FILE *gf )
                 }
 
                 lseek( h, shift, SEEK_END );
-                read( h, &a, 1 );
+                if( read( h, &a, 1 ) < 0 ) { /* */ }
                 gf->data.handle = h;
             } else {
                 shift -= dataStart;
@@ -208,6 +216,8 @@ void SpecialFclose( GENERIC_FILE *gf )
             close( gf->data.handle );
         }
         break;
+    default:
+        break;
     }
 
 } /* SpecialFclose */
@@ -235,7 +245,7 @@ int SpecialFgets( char *buff, int max, GENERIC_FILE *gf )
         }
         gf->gf.a.currline++;
         if( BndMemory == NULL ) {
-            read( gf->data.handle, buff, gf->gf.a.length+1 );
+            if( read( gf->data.handle, buff, gf->gf.a.length+1 ) < 0 ) { /* */ }
         } else {
             memcpy( buff, gf->data.pos, gf->gf.a.length + 1 );
             gf->data.pos += gf->gf.a.length + 1;

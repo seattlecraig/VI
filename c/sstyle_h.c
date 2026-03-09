@@ -213,6 +213,7 @@ void GetHTMLBlock( ss_block *ss_new, char *start, int line )
     case '>':
         flags.inHTMLKeyword = FALSE;
         break;
+    default: break;
     }
 
     if( isalnum( start[0] ) || (start[0] == '_') ) {

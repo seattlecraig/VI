@@ -58,7 +58,7 @@ vi_rc FTSStart( char *data )
                         (ss **)&fts->template_tail, (ss *)templatePtr );
     }
 
-    if( ftsOld = FTSMatchTemplate( fts->template_head ) ) {
+    if( (ftsOld = FTSMatchTemplate( fts->template_head )) ) {
         FTSKill( ftsOld );
     }
     AddLLItemAtEnd( (ss **)&ftsHead, (ss **)&ftsTail, (ss *)fts );

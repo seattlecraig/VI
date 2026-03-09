@@ -287,11 +287,31 @@ void MakeTmpPath( char *out, char *in )
 vi_rc TmpFileOpen( char *inname, int *_handle )
 {
     char        file[VI_MAX_PATH];
+#ifdef __LINUX__
+    int         fd;
 
+    /* Build a mkstemp template in the tmp directory */
+    strcpy( inname, "viXXXXXX" );
+    MakeTmpPath( file, inname );
+    fd = mkstemp( file );
+    if( fd < 0 ) {
+        return( ERR_FILE_OPEN );
+    }
+    /* Extract the generated filename back into inname */
+    {
+        char *p = strrchr( file, '/' );
+        if( p != NULL ) {
+            strcpy( inname, p + 1 );
+        }
+    }
+    *_handle = fd;
+    return( ERR_NO_ERR );
+#else
     tmpnam( inname );
     MakeTmpPath( file, inname );
     return( FileOpen( file, FALSE, O_TRUNC | O_RDWR | O_BINARY | O_CREAT,
                       0, _handle ) );
+#endif
 
 } /* TmpFileOpen */
 

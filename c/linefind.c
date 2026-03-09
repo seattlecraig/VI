@@ -245,7 +245,7 @@ static bool testIfCharNotInRange( char c, char *clist )
  */
 vi_rc FindCharOnCurrentLine( bool fwdflag, int mod, int *col, int cnt )
 {
-    int         i, c, j;
+    int         i = 0, c, j;
     char        lst[2];
 
     c = CurrentPos.column - 1;

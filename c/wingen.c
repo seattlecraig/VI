@@ -34,6 +34,7 @@
 #include "mouse.h"
 #include "source.h"
 #include "myprtf.h"
+#include "dc.h"
 
 static  bool    cursorNeedsDisplay = FALSE;
 
@@ -340,7 +341,9 @@ void SetFileWindowTitle( window_id cw, info *cinfo, bool hilite )
 {
     char        *n;
     char        name[MAX_STR];
+#ifdef __NT__
     char        title[MAX_STR];
+#endif
 
     if( CurrentFile->dup_count > 0 ) {
         MySprintf( name, "%s [%d]", CurrentFile->name, cinfo->DuplicateID );
@@ -352,7 +355,7 @@ void SetFileWindowTitle( window_id cw, info *cinfo, bool hilite )
 #ifdef __WIN__
     SetWindowText( cw, n );
     UpdateFileTypeIcon( cw, n );
-#else
+#elif defined( __NT__ )
     /* Update the console window title with the current file name */
     MySprintf( title, "Craig's VI: %s", n );
     SetConsoleTitleA( title );
@@ -373,6 +376,9 @@ void ResetAllWindows( void )
         SaveCurrentInfo();
         BringUpFile( cinfo, FALSE );
         ResetWindow( &CurrentWindow );
+        /* Update the display cache to match the new window size
+         * so DCUpdate renders the correct number of lines (including ~'s) */
+        DCResize( CurrentInfo );
     }
 
     if( oldcurr != NULL ) {

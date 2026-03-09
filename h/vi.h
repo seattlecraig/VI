@@ -87,6 +87,16 @@ void            *_inline_memset( void *__s, int __c, unsigned int __n );
  * to make all ctype calls safe.
  */
 #ifndef __WATCOMC__
+  #undef isspace
+  #undef isalpha
+  #undef isdigit
+  #undef isalnum
+  #undef isupper
+  #undef islower
+  #undef isprint
+  #undef isxdigit
+  #undef toupper
+  #undef tolower
   #define isspace( c )  isspace( (unsigned char)(c) )
   #define isalpha( c )  isalpha( (unsigned char)(c) )
   #define isdigit( c )  isdigit( (unsigned char)(c) )

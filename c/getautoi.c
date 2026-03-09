@@ -47,6 +47,7 @@ static vi_rc getBracketLoc( i_mark *pos )
     tmp[1] = ')';
     tmp[2] = 0;
     lne = CurrentPos.line;
+    (void)lne; /* suppress unused variable warning */
     RegExpAttrSave( -1, NULL );
     rc = GetFind( tmp, pos, &len, FINDFL_BACKWARDS | FINDFL_NOERROR | FINDFL_NOCHANGE );
     RegExpAttrRestore();

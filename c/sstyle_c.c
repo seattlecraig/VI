@@ -192,6 +192,7 @@ static void getFloat( ss_block *ss_new, char *start, int skip, int command )
             while( isdigit( *text ) ) {
                 text++;
             }
+        default: break;
     }
 
     // get float/long spec
@@ -771,6 +772,7 @@ void GetCBlock( ss_block *ss_new, char *start, line *line, linenum line_no )
                 return;
             }
             break;
+        default: break;
     }
 
     if( issymbol( start[0] ) ) {

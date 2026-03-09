@@ -157,10 +157,15 @@ static vi_rc srcHook( hooktype num, vi_rc lastrc )
 vi_rc SourceHook( hooktype num, vi_rc lastrc )
 {
     char        data[1];
+    vi_rc       rc;
 
     data[0] = 0;
+    /* intentional: srcHookData points to local 'data' but is only used
+     * within srcHook() which returns before this function does */
     srcHookData = data;
-    return( srcHook( num, lastrc ) );
+    rc = srcHook( num, lastrc );
+    srcHookData = NULL;
+    return( rc );
 
 } /* SourceHook */
 
@@ -171,8 +176,10 @@ vi_rc SourceHookData( hooktype num, char *data )
 {
     vi_rc       rc;
 
+    /* intentional: srcHookData is only used within srcHook() below */
     srcHookData = data;
     rc = srcHook( num, ERR_NO_ERR );
+    srcHookData = NULL;
     return( rc );
 
 } /* SourceHookData */

@@ -498,6 +498,8 @@ char *LookUpCharToken( vi_key key, bool want_single )
             return( "h" );
         case '\\':
             return( "\\" );
+        default:
+            break;
         }
     }
     for( i = 0; i < num; i++ ) {

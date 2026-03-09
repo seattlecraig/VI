@@ -175,6 +175,7 @@ vi_rc SelectItemAndValue( window_info *wi, char *title, char **list,
             break;
         }
         j = (int) sfd.sl - 1;
+        (void)j; /* suppress unused variable warning */
 
     }
 

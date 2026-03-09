@@ -45,7 +45,7 @@ vi_rc Shift( linenum s, linenum e, char dir, bool msgflag )
     /*
      * set up undo
      */
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
     rc = UndoReplaceLines( s, e );

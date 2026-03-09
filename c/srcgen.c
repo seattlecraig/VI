@@ -99,7 +99,7 @@ void GenLabel( label where )
     vi_rc   rc;
 
     genItem( SRC_T_LABEL, where );
-    if( rc = AddLabel( tmpTail, cLab, where ) ) {
+    if( (rc = AddLabel( tmpTail, cLab, where )) ) {
         AbortGen( rc );
     }
     tmpTail->hasvar = FALSE;
@@ -294,7 +294,7 @@ vi_rc PreProcess( char *fn, sfile **sf, labels *lab )
             }
         } else {
             len = NextWord1( tmp, tmp2 );
-            hasVar = (bool) tmp2[0] - '0';
+            hasVar = (bool)( tmp2[0] - '0' );
             token = atoi( &tmp2[1] );
         }
 

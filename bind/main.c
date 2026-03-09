@@ -31,6 +31,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <stdarg.h>
 #include <string.h>
 #include <ctype.h>
@@ -55,7 +56,7 @@ char    magic_cookie[] = "CGEXXX";
 char    *dats[MAX_DATA_FILES];
 
 short   FileCount;
-long    *index;
+int32_t *offsets;
 short   *entries;
 short   sflag = FALSE;
 short   qflag = FALSE;
@@ -106,12 +107,20 @@ void MyPrintf( char *str, ... )
 /*
  * AddDataToEXE - tack data to end of an EXE
  */
-void AddDataToEXE( char *exe, char *buffer, unsigned short len, unsigned long tocopy )
+void AddDataToEXE( char *exe, char *buffer, int32_t len, unsigned long tocopy )
 {
     int                 h, i, newh;
-    char                buff[MAGIC_COOKIE_SIZE + 3];
+    /*
+     * Trailer layout:
+     *   magic_cookie (MAGIC_COOKIE_SIZE bytes, null-terminated)
+     *   1 pad byte
+     *   int32_t length of bound data
+     * Total trailer size = MAGIC_COOKIE_SIZE + 1 + sizeof(int32_t) = 12 bytes
+     */
+    #define TRAILER_SIZE  ((int)(MAGIC_COOKIE_SIZE + 1 + sizeof( int32_t )))
+    char                buff[TRAILER_SIZE];
     long                shift;
-    short               taillen;
+    int32_t             taillen;
     char                *copy;
     char                foo[128];
     char                drive[_MAX_DRIVE], dir[_MAX_DIR];
@@ -138,11 +147,11 @@ void AddDataToEXE( char *exe, char *buffer, unsigned short len, unsigned long to
     /*
      * get trailer
      */
-    i = lseek( h, -((long)MAGIC_COOKIE_SIZE + 3L), SEEK_END );
+    i = lseek( h, -(long)TRAILER_SIZE, SEEK_END );
     if( i == -1 ) {
         Abort( "Initial seek error on \"%s\"", exe );
     }
-    i = read( h, buff, 3 + MAGIC_COOKIE_SIZE );
+    i = read( h, buff, TRAILER_SIZE );
     if( i == -1 ) {
         Abort( "Read error on \"%s\"", exe );
     }
@@ -156,8 +165,8 @@ void AddDataToEXE( char *exe, char *buffer, unsigned short len, unsigned long to
             Abort( "\"%s\" does not contain configuration data!", exe );
         }
     } else {
-        taillen = *( (unsigned short *)&(buff[MAGIC_COOKIE_SIZE + 1]) );
-        shift = (long)-((long)taillen + (long)MAGIC_COOKIE_SIZE + 3);
+        taillen = *( (int32_t *)&(buff[MAGIC_COOKIE_SIZE + 1]) );
+        shift = (long)-((long)taillen + (long)TRAILER_SIZE);
         tocopy += shift;
     }
     i = lseek( h, 0, SEEK_SET );
@@ -181,7 +190,7 @@ void AddDataToEXE( char *exe, char *buffer, unsigned short len, unsigned long to
             tocopy -= (unsigned long)COPY_SIZE;
         } else {
             i = read( h, copy, (unsigned int)tocopy );
-            if( i != tocopy ) {
+            if( i != (int)tocopy ) {
                 Abort( "Read error on \"%s\"", exe );
             }
             i = write( newh, copy, (unsigned int)tocopy );
@@ -201,12 +210,20 @@ void AddDataToEXE( char *exe, char *buffer, unsigned short len, unsigned long to
         if( i != len ) {
             Abort( "write 1 error on \"%s\"", exe );
         }
-        i = write( newh, magic_cookie, MAGIC_COOKIE_SIZE + 1 );
-        if( i != MAGIC_COOKIE_SIZE + 1 ) {
-            Abort( "write 2 error on \"%s\"", exe );
+        i = write( newh, magic_cookie, MAGIC_COOKIE_SIZE );
+        if( i != (int)MAGIC_COOKIE_SIZE ) {
+            Abort( "write 2a error on \"%s\"", exe );
         }
-        i = write( newh, &len, sizeof( short ) );
-        if( i != sizeof( short ) ) {
+        /* Write one padding byte between cookie and length field */
+        {
+            char pad = 0;
+            i = write( newh, &pad, 1 );
+            if( i != 1 ) {
+                Abort( "write 2b error on \"%s\"", exe );
+            }
+        }
+        i = write( newh, &len, sizeof( int32_t ) );
+        if( i != sizeof( int32_t ) ) {
             Abort( "write 3 error on \"%s\"", exe );
         }
     }
@@ -248,7 +265,7 @@ FILE *GetFromEnvAndOpen( char *inpath )
 /*
  * Usage - dump the usage message
  */
-#ifndef __ALPHA__
+#ifdef __WATCOMC__
     #pragma aux Usage aborts;
 #endif
 
@@ -325,7 +342,7 @@ int main( int argc, char *argv[] )
     char                *buff = NULL;
     char                *buff2, *buff3;
     char                *buffn, *buffs;
-    int                 i, cnt, bytes, lines, j, k, sl;
+    int                 i, cnt = 0, bytes, lines, j, k, sl;
     FILE                *f;
     struct stat         fs;
     char                drive[_MAX_DRIVE], dir[_MAX_DIR];
@@ -370,11 +387,16 @@ int main( int argc, char *argv[] )
         Usage( "No executable to bind" );
     }
     _splitpath( argv[1], drive, dir, fname, ext );
+#ifdef __UNIX__
+    /* On Unix, executables have no extension — use the name as-is */
+    strcpy( path, argv[1] );
+#else
     if( ext[0] == 0 ) {
         _makepath( path, drive, dir, fname, ".exe" );
     } else {
         strcpy( path, argv[1] );
     }
+#endif
     if( stat( path, &fs ) == -1 ) {
         Abort( "Could not find executable \"%s\"", path );
     }
@@ -413,7 +435,7 @@ int main( int argc, char *argv[] )
             }
         }
         fclose( f );
-        index = MyAlloc( FileCount * sizeof( long ) );
+        offsets = MyAlloc( FileCount * sizeof( int32_t ) );
         entries = MyAlloc( FileCount * sizeof( short ) );
 
         buffn = buff;
@@ -442,8 +464,8 @@ int main( int argc, char *argv[] )
         buffn++;
         cnt++;
         buffs = buffn;
-        buffn += FileCount * (sizeof( short ) + sizeof( long ));
-        cnt += FileCount * (sizeof( short ) + sizeof( long ));
+        buffn += FileCount * (sizeof( short ) + sizeof( int32_t ));
+        cnt += FileCount * (sizeof( short ) + sizeof( int32_t ));
 
         for( j = 0; j < FileCount; j++ ) {
             MyPrintf( "Loading" );
@@ -453,7 +475,7 @@ int main( int argc, char *argv[] )
             }
             setvbuf( f, buff2, _IOFBF, 32000 );
             bytes = lines = 0;
-            index[j] = (long)cnt;
+            offsets[j] = (int32_t)cnt;
             while( fgets( buff3, MAX_LINE_LEN, f ) != NULL ) {
                 for( i = strlen( buff3 ); i && isWSorCtrlZ( buff3[i - 1] ); --i )
                     buff3[i - 1] = '\0';
@@ -478,8 +500,8 @@ int main( int argc, char *argv[] )
             MyPrintf( "Added %d lines (%d bytes)\n", lines, bytes );
         }
         i = FileCount;
-        memcpy( buffs, index, FileCount * sizeof( long ) );
-        buffs += FileCount * sizeof( long );
+        memcpy( buffs, offsets, FileCount * sizeof( int32_t ) );
+        buffs += FileCount * sizeof( int32_t );
         memcpy( buffs, entries, FileCount * sizeof( short ) );
     }
 

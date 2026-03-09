@@ -213,6 +213,7 @@ vi_rc WindowCascade( void )
     yend -= cnt - 1;
     SaveCurrentInfo();
     cwinfo = cinfo = CurrentInfo;
+    (void)cwinfo; /* suppress unused variable warning */
 
     /*
      * resize all the files

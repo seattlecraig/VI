@@ -512,6 +512,8 @@ vi_rc IMCursorKey( void )
         GoToColumn( CurrentPos.column + 1, wlen );
         abbrevCnt = 0;
         return( ERR_NO_ERR );
+    default:
+        break;
     }
 
     /*
@@ -587,9 +589,9 @@ vi_rc IMSpace( void )
 vi_rc IMTabs( void )
 {
     char        *buff;
-    bool        back;
+    bool        back = FALSE;
     int         cp, vc, tc, add;
-    int         i, j;
+    int         i, j = 0;
     int         len;
 
     startNewLineUndo();
@@ -635,6 +637,8 @@ vi_rc IMTabs( void )
         case VI_KEY( CTRL_T ):
             j = Tab( vc, ShiftWidth );
             back = FALSE;
+            break;
+        default:
             break;
         }
         if( back && (vc - j < 1) ) {
@@ -688,6 +692,8 @@ vi_rc IMTabs( void )
         cp = RealColumnOnCurrentLine( cp ) + add;
         GoToColumn( cp, WorkLine->len + 1 );
         DisplayWorkLine( FALSE );
+        break;
+    default:
         break;
     }
     return( ERR_NO_ERR );
@@ -789,6 +795,7 @@ static vi_rc getBracketLoc( i_mark *pos )
     tmp[1] = ')';
     tmp[2] = 0;
     lne = CurrentPos.line;
+    (void)lne; /* suppress unused variable warning */
     RegExpAttrSave( -1, NULL );
     rc = GetFind( tmp, pos, &len, FINDFL_BACKWARDS | FINDFL_NOERROR | FINDFL_NOCHANGE );
     RegExpAttrRestore();
@@ -927,7 +934,7 @@ static vi_rc stdInsert( int col, bool overstrike )
 {
     vi_rc   rc;
 
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
     StartUndoGroup( UndoStack );
@@ -989,7 +996,7 @@ static vi_rc insertTextOnOtherLine( insert_dir type )
     bool        above_line = FALSE;
     vi_rc       rc;
 
-    if( rc = ModificationTest() ) {
+    if( (rc = ModificationTest()) ) {
         return( rc );
     }
     /*

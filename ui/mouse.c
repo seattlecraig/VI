@@ -215,7 +215,7 @@ static void eraseMouseCursor( void )
  */
 void RedrawMouse( int row, int col )
 {
-    if( oldRow == row && oldCol == col || EditFlags.HasSystemMouse ) {
+    if( (oldRow == row && oldCol == col) || EditFlags.HasSystemMouse ) {
         return;
     }
     eraseMouseCursor();
